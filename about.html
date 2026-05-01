@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Midsouth Venture Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --black-mid: #111111;
+      --black-soft: #1a1a1a;
+      --silver-dark: #7a7a7a;
+      --silver: #a8a8a8;
+      --silver-light: #d0d0d0;
+      --silver-pale: #e8e8e8;
+      --gold: #c9a84c;
+      --gold-light: #e2c47a;
+      --gold-pale: #f0dba0;
+      --white: #f5f5f0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--silver-light);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--silver); text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold-light); }
+    .nav-cta {
+      background: transparent; border: 1px solid var(--gold);
+      color: var(--gold); padding: 0.55rem 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.25s, color 0.25s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 10rem 4rem 6rem;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .page-header-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 80% at 80% 50%, rgba(201,168,76,0.05) 0%, transparent 65%),
+        var(--black);
+    }
+    .page-header-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 100% 100% at 80% 50%, black 20%, transparent 75%);
+    }
+    .page-header-line {
+      position: absolute; top: 0; left: 50%; width: 1px; height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+    }
+    .page-header-inner {
+      position: relative; z-index: 2;
+      max-width: 760px;
+    }
+    .page-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.4rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .page-eyebrow::before {
+      content: ''; display: block; width: 32px; height: 1px; background: var(--gold);
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300; line-height: 1.05; color: var(--white);
+    }
+    .page-title em { font-style: italic; color: var(--gold-light); }
+
+    /* ── SECTIONS ── */
+    .content-section { padding: 6rem 4rem; }
+    .content-section.alt { background: var(--black-mid); border-top: 1px solid rgba(201,168,76,0.08); border-bottom: 1px solid rgba(201,168,76,0.08); }
+    .section-cap { max-width: 1100px; margin: 0 auto; }
+
+    .section-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    .section-tag::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300; color: var(--white); line-height: 1.2;
+    }
+    .gold-divider { width: 48px; height: 2px; background: var(--gold); margin: 1.6rem 0; }
+
+    /* ── ORIGIN STORY ── */
+    .story-grid {
+      margin-top: 3.5rem;
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem;
+      align-items: start;
+    }
+    .story-pull {
+      position: sticky; top: 7rem;
+    }
+    .pull-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem; font-weight: 300; font-style: italic;
+      color: var(--white); line-height: 1.4;
+      border-left: 2px solid var(--gold);
+      padding-left: 1.8rem;
+    }
+    .pull-quote span { color: var(--gold-light); }
+    .pull-attr {
+      margin-top: 1.4rem; padding-left: 1.8rem;
+      font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--silver-dark);
+    }
+    .story-body p {
+      font-size: 1.08rem; line-height: 1.85; color: var(--silver);
+      margin-bottom: 1.6rem;
+    }
+    .story-body p strong { color: var(--white); font-weight: 500; }
+    .story-body p:last-child { margin-bottom: 0; }
+
+    /* ── PROBLEM / MISSION ── */
+    .mission-block {
+      margin-top: 3.5rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    }
+    .mission-card {
+      background: var(--black-soft);
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 2.8rem 2.4rem;
+      position: relative;
+    }
+    .mission-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    .mission-card-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+    }
+    .mission-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem; font-weight: 300; color: var(--white);
+      line-height: 1.3; margin-bottom: 1.2rem;
+    }
+    .mission-card p {
+      font-size: 0.95rem; line-height: 1.75; color: var(--silver-dark);
+    }
+
+    /* ── WHAT MAKES US DIFFERENT ── */
+    .diff-grid {
+      margin-top: 3.5rem;
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem;
+      align-items: center;
+    }
+    .diff-copy p {
+      font-size: 1.05rem; line-height: 1.85; color: var(--silver);
+      margin-bottom: 1.4rem;
+    }
+    .diff-copy p strong { color: var(--white); font-weight: 500; }
+    .diff-list {
+      margin-top: 2.5rem; list-style: none;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .diff-list li {
+      display: flex; align-items: flex-start; gap: 1rem;
+      font-size: 0.98rem; line-height: 1.6; color: var(--silver);
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .diff-list li:last-child { border-bottom: none; }
+    .diff-list li .di {
+      color: var(--gold); flex-shrink: 0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-top: 0.15rem; white-space: nowrap;
+    }
+    .diff-stat-block {
+      background: rgba(201,168,76,0.04);
+      border: 1px solid rgba(201,168,76,0.18);
+      padding: 3rem 2.5rem;
+      position: relative;
+    }
+    .diff-stat-block::after {
+      content: ''; position: absolute;
+      bottom: -6px; right: -6px;
+      width: 50px; height: 50px;
+      border-bottom: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+    }
+    .diff-stat {
+      margin-bottom: 2.4rem;
+      padding-bottom: 2.4rem;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .diff-stat:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .diff-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-weight: 600; color: var(--gold-light); line-height: 1;
+    }
+    .diff-stat-label {
+      font-size: 0.82rem; color: var(--silver-dark); margin-top: 0.4rem; line-height: 1.5;
+    }
+
+    /* ── JOY / PASSION ── */
+    .passion-section {
+      background: var(--black);
+      padding: 6rem 4rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .passion-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 350px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .passion-inner {
+      position: relative; z-index: 1;
+      max-width: 780px; margin: 0 auto;
+    }
+    .passion-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 300; font-style: italic;
+      color: var(--white); line-height: 1.45;
+      margin-bottom: 2rem;
+    }
+    .passion-quote span { color: var(--gold-light); }
+    .passion-body {
+      font-size: 1rem; line-height: 1.8; color: var(--silver);
+      max-width: 620px; margin: 0 auto;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: var(--black-mid);
+      padding: 7rem 4rem;
+      border-top: 1px solid rgba(201,168,76,0.12);
+    }
+    .cta-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem;
+      align-items: center;
+    }
+    .cta-copy .section-tag { margin-bottom: 1rem; }
+    .cta-copy .section-title { margin-bottom: 1.4rem; }
+    .cta-copy p {
+      font-size: 1.05rem; line-height: 1.8; color: var(--silver);
+      margin-bottom: 0;
+    }
+    .cta-actions {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .btn-primary {
+      display: block; text-align: center;
+      background: var(--gold); color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 1.1rem 2.4rem;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-secondary {
+      display: block; text-align: center;
+      background: transparent; color: var(--silver-light);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 1rem 2rem;
+      border: 1px solid rgba(168,168,168,0.35);
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .btn-secondary:hover { border-color: var(--silver-light); color: var(--white); }
+    .cta-note {
+      font-size: 0.78rem; color: var(--silver-dark);
+      text-align: center; margin-top: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black); padding: 2.5rem 4rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 0.9rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--silver-dark);
+    }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: 0.78rem; color: var(--silver-dark); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.7s both; }
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.3s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      .page-header, .content-section, .passion-section, .cta-section { padding-left: 2rem; padding-right: 2rem; }
+      .story-grid, .diff-grid, .mission-block, .cta-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .story-pull { position: static; }
+      footer { padding: 2rem; flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Midsouth <span>Venture</span> Labs</a>
+    <ul class="nav-links">
+      <li><a href="index.html#value">Program</a></li>
+      <li><a href="index.html#startups">Startups</a></li>
+      <li><a href="index.html#investors">For Investors &amp; Partners</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+    <a href="index.html#apply" class="nav-cta">Apply Now</a>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="page-header-bg"></div>
+    <div class="page-header-grid"></div>
+    <div class="page-header-line"></div>
+    <div class="page-header-inner">
+      <div class="page-eyebrow fade-up">Our Story</div>
+      <h1 class="page-title fade-up delay-1">
+        Built by a Founder.<br><em>For Founders.</em>
+      </h1>
+    </div>
+  </header>
+
+  <!-- ORIGIN STORY -->
+  <section class="content-section">
+    <div class="section-cap">
+      <div class="section-tag">The Origin</div>
+      <h2 class="section-title">I Learned the Hard Way.<br>You Don't Have To.</h2>
+      <div class="story-grid">
+        <div class="story-pull">
+          <div class="pull-quote">
+            "I made every mistake in the book — and it cost me time, money, and momentum I couldn't get back."
+          </div>
+          <div class="pull-attr">— Founder, Midsouth Venture Labs</div>
+        </div>
+        <div class="story-body">
+          <p>Midsouth Venture Labs wasn't born in a boardroom. It was born out of frustration — the kind that comes from going through a startup journey largely alone, without the right structure, the right advisors, or the right roadmap.</p>
+          <p>I built my first company the hard way. I pitched investors before my deck was ready. I set up the wrong legal structure and had to unwind it. I chased customers without a clear discovery process and wasted months building things nobody wanted. Not because I wasn't capable — but because <strong>nobody handed me a playbook, and I didn't know what I didn't know.</strong></p>
+          <p>When I came out the other side, I made a decision: I wasn't going to let that be the story for other founders in this region. The Mid-South has extraordinary talent, grit, and ideas. What it has lacked is a dedicated home where founders can get the structured, experienced support that turns raw potential into fundable, launchable companies.</p>
+          <p>That's why I built Midsouth Venture Labs — not as a program, but as the resource I wish had existed when I was starting out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section class="content-section alt">
+    <div class="section-cap">
+      <div class="section-tag">The Problem We Solve</div>
+      <h2 class="section-title">Too Many Founders Are Losing<br>Time They Can't Afford to Lose.</h2>
+      <div class="mission-block">
+        <div class="mission-card">
+          <div class="mission-card-label">The Problem</div>
+          <div class="mission-card-title">Years Wasted on Avoidable Mistakes</div>
+          <p>The biggest threat to a startup isn't competition or bad timing. It's a founder spending two years learning things they could have learned in two months — wrong structure, weak pitch, no investor network, no path to customers. These aren't talent failures. They're information and access failures. And they happen every day to talented founders right here in the Mid-South.</p>
+        </div>
+        <div class="mission-card">
+          <div class="mission-card-label">Our Mission</div>
+          <div class="mission-card-title">Compress the Learning Curve. Accelerate the Outcome.</div>
+          <p>Midsouth Venture Labs exists to give founders the structured support, honest feedback, and warm relationships that collapse years of trial and error into a focused 12-week sprint. We don't just point you in the right direction — we walk the path with you, making sure you're set up correctly, pitching powerfully, and building a business that's ready for what comes next.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT MAKES US DIFFERENT -->
+  <section class="content-section">
+    <div class="section-cap">
+      <div class="section-tag">Why MVL</div>
+      <h2 class="section-title">Deeply Local.<br>Fiercely Committed.</h2>
+      <div class="diff-grid">
+        <div class="diff-copy">
+          <p>There are accelerators everywhere. Most of them are built for Silicon Valley, focused on software, and designed for founders who already have a network. <strong>Midsouth Venture Labs is different by design.</strong></p>
+          <p>We're not a franchise of a coastal program. We're not a demo day factory. We're a locally rooted accelerator built specifically for the Mid-South ecosystem — which means we know the investors here, the corporate partners here, the customers here, and the community here in ways that no out-of-market program ever could.</p>
+          <p>When you join MVL, you're not getting a generic curriculum. You're getting a founder-to-founder relationship with someone who has been where you are, who understands the unique dynamics of building in this market, and who is personally invested in your outcome.</p>
+          <ul class="diff-list">
+            <li><span class="di">Local Network</span> Direct relationships with Mid-South investors, corporates, and ecosystem leaders — not warm intros to people who've never heard of Memphis</li>
+            <li><span class="di">Operator Lens</span> Coaching grounded in real startup experience, not theory — we've made the mistakes so you don't have to</li>
+            <li><span class="di">Tech + Non-Tech</span> We work with any scalable business model, not just software startups</li>
+            <li><span class="di">Full Stack</span> From legal setup to Demo Day, we cover the full journey — not just one piece of it</li>
+          </ul>
+        </div>
+        <div class="diff-stat-block">
+          <div class="diff-stat">
+            <div class="diff-stat-num">12</div>
+            <div class="diff-stat-label">Weeks of structured, hands-on acceleration</div>
+          </div>
+          <div class="diff-stat">
+            <div class="diff-stat-num">5</div>
+            <div class="diff-stat-label">Core pillars: pitch, setup, investors, pilots, and launch</div>
+          </div>
+          <div class="diff-stat">
+            <div class="diff-stat-num">1</div>
+            <div class="diff-stat-label">Region we know better than anyone — the Mid-South</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASSION / JOY -->
+  <section class="passion-section">
+    <div class="passion-glow"></div>
+    <div class="passion-inner">
+      <div class="section-tag" style="justify-content:center;">What Drives Us</div>
+      <div class="passion-quote">
+        "The moment that never gets old is watching a founder who came in unsure of how to tell their story <span>walk onto that Demo Day stage and own the room.</span>"
+      </div>
+      <p class="passion-body">That's what this is all for. Not the paperwork, not the pitch decks, not the frameworks — though all of it matters. It's the transformation. Watching someone go from uncertain to undeniable. That's the work. That's why Midsouth Venture Labs exists. And if you're a founder who's ready to make that transformation, we're ready to help you get there.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <div class="cta-copy">
+        <div class="section-tag">Join the Program</div>
+        <h2 class="section-title">Your Story<br>Starts Here.</h2>
+        <p>If you're an early-stage founder in the Mid-South with an idea worth building, we want to hear from you. Applications are reviewed on a rolling basis — cohort seats are limited and go fast.</p>
+      </div>
+      <div>
+        <div class="cta-actions">
+          <a href="mailto:apply@midsouthventurelabs.com" class="btn-primary">Apply to the Program →</a>
+          <a href="mailto:invest@midsouthventurelabs.com" class="btn-secondary">Join as Investor / Partner</a>
+        </div>
+        <p class="cta-note">Not sure if you're ready? Reach out anyway. We'll tell you honestly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Midsouth <span>Venture</span> Labs</div>
+    <p>Memphis, Tennessee · Mid‑South Region</p>
+    <p>© 2025 Midsouth Venture Labs. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

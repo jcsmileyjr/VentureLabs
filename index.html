@@ -633,5 +633,36 @@
     <p>© 2025 Midsouth Venture Labs. All rights reserved.</p>
   </footer>
 
+  <!-- ── SUPABASE ── -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL    = 'https://tacdeguqsjsebckzlpwz.supabase.co';   // e.g. https://xyzabc.supabase.co
+    const SUPABASE_ANON_KEY = 'sb_publishable_cq5Lw5KViEIXzJOyXqWjMg_Spa2wmY-';   // your public anon key
+ 
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+ 
+    async function fetchClients() {
+      console.group('%c Midsouth Venture Labs — Supabase', 'color: #c9a84c; font-weight: bold;');
+      console.log('Fetching clients table...');
+ 
+      const { data, error } = await db
+        .from('clients')
+        .select('*');
+ 
+      if (error) {
+        console.error('Error fetching clients:', error.message);
+        console.groupEnd();
+        return;
+      }
+ 
+      console.log(`%c ${data.length} record(s) returned`, 'color: #a8a8a8;');
+      console.table(data);
+      console.groupEnd();
+    }
+ 
+    fetchClients();
+  </script>  
+
 </body>
 </html>

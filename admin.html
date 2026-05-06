@@ -649,7 +649,7 @@
       document.getElementById('number_of_investors').value  = client.number_of_investors  ?? '';
       document.getElementById('number_of_pilots').value     = client.number_of_pilots     ?? '';
       document.getElementById('have_mvp').checked           = !!client.have_mvp;
-      editIdField.value = client.id;
+      editIdField.value = client.business_id;
       setEditMode();
     }
 
@@ -685,7 +685,7 @@
       const { data, error } = await db
         .from('clients')
         .select('*')
-        .order('id', { ascending: false });
+        .order('business_id', { ascending: false });
 
       if (error) {
         clientList.innerHTML = `<div class="loading-state" style="color:var(--danger-light);">Error: ${error.message}</div>`;
@@ -724,8 +724,8 @@
           </td>
           <td>
             <div class="row-actions">
-              <button class="btn-edit"   onclick="editClient('${c.id}')">Edit</button>
-              <button class="btn-delete" onclick="requestDelete('${c.id}')">Delete</button>
+              <button class="btn-edit"   onclick="editClient('${c.business_id}')">Edit</button>
+              <button class="btn-delete" onclick="requestDelete('${c.business_id}')">Delete</button>
             </div>
           </td>
         </tr>
@@ -783,7 +783,7 @@
       const { error } = await db
         .from('clients')
         .update(formData)
-        .eq('id', id);
+        .eq('business_id', id);
 
       if (error) {
         showToast(`Update failed: ${error.message}`, true);
@@ -801,7 +801,7 @@
       const { error } = await db
         .from('clients')
         .delete()
-        .eq('id', id);
+        .eq('business_id', id);
 
       if (error) {
         showToast(`Delete failed: ${error.message}`, true);
@@ -818,7 +818,7 @@
       const { data, error } = await db
         .from('clients')
         .select('*')
-        .eq('id', id)
+        .eq('business_id', id)
         .single();
 
       if (error || !data) {

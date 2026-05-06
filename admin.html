@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Midsouth Venture Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── DESIGN TOKENS (matches site) ── */
+    :root {
+      --black: #0a0a0a;
+      --black-mid: #111111;
+      --black-soft: #1a1a1a;
+      --silver-dark: #7a7a7a;
+      --silver: #a8a8a8;
+      --silver-light: #d0d0d0;
+      --silver-pale: #e8e8e8;
+      --gold: #c9a84c;
+      --gold-light: #e2c47a;
+      --gold-pale: #f0dba0;
+      --white: #f5f5f0;
+      --danger: #c0392b;
+      --danger-light: #e74c3c;
+      --success: #2e7d5e;
+      --success-light: #3da878;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--silver-light);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV (identical to site) ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--silver); text-decoration: none; transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-links a.active { color: var(--gold); }
+    .nav-cta {
+      background: transparent; border: 1px solid var(--gold);
+      color: var(--gold); padding: 0.55rem 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.25s, color 0.25s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+    /* ── PAGE LAYOUT ── */
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8rem 4rem 6rem;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 3.5rem;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      padding-bottom: 2.5rem;
+    }
+    .page-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .page-eyebrow::before {
+      content: ''; display: block; width: 32px; height: 1px; background: var(--gold);
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300; color: var(--white); line-height: 1.2;
+    }
+    .page-title em { font-style: italic; color: var(--gold-light); }
+
+    /* ── TOAST NOTIFICATION ── */
+    #toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+      background: var(--black-soft);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-left: 3px solid var(--gold);
+      color: var(--silver-light);
+      font-size: 0.88rem; padding: 1rem 1.5rem;
+      min-width: 260px;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.error { border-left-color: var(--danger-light); }
+
+    /* ── SECTION TAG ── */
+    .section-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 1.4rem;
+    }
+    .section-tag::before {
+      content: ''; width: 24px; height: 1px; background: var(--gold);
+    }
+
+    /* ── FORM SECTION ── */
+    .form-section {
+      background: var(--black-mid);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 2.8rem;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    .form-section::before {
+      content: ''; position: absolute;
+      top: 0; left: 2rem; width: 60px; height: 2px;
+      background: var(--gold);
+    }
+    .form-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+    .form-mode-badge {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.2rem 0.7rem;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold);
+      margin-bottom: 1.8rem;
+    }
+    .form-mode-badge.edit-mode {
+      background: rgba(46,125,94,0.1);
+      border-color: rgba(61,168,120,0.3);
+      color: var(--success-light);
+    }
+
+    /* Form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem 2rem;
+    }
+    .form-group {
+      display: flex; flex-direction: column; gap: 0.45rem;
+    }
+    .form-group.full-width { grid-column: 1 / -1; }
+    .form-group label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--silver-dark);
+    }
+    .form-group input,
+    .form-group select {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.92rem; font-weight: 300;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.25s;
+      width: 100%;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: rgba(201,168,76,0.45);
+    }
+    .form-group input::placeholder { color: var(--silver-dark); }
+    .form-group select option {
+      background: var(--black-soft);
+      color: var(--white);
+    }
+
+    /* Checkbox row */
+    .checkbox-group {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 16px; height: 16px; padding: 0;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+    .checkbox-group label {
+      font-size: 0.88rem; letter-spacing: 0; text-transform: none;
+      color: var(--silver); cursor: pointer; font-family: 'Barlow', sans-serif;
+    }
+
+    /* Form actions */
+    .form-actions {
+      margin-top: 2rem;
+      display: flex; gap: 0.8rem; align-items: center;
+    }
+    .btn-primary {
+      background: var(--gold); color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.88rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.9rem 2.2rem;
+      border: none; cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-cancel {
+      background: transparent; color: var(--silver);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.88rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 0.9rem 1.8rem;
+      border: 1px solid rgba(168,168,168,0.25);
+      cursor: pointer;
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .btn-cancel:hover { border-color: var(--silver); color: var(--white); }
+
+    /* ── CLIENT LIST SECTION ── */
+    .list-section { position: relative; }
+    .list-header {
+      display: flex; align-items: flex-end;
+      justify-content: space-between; margin-bottom: 1.5rem;
+    }
+    .list-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; color: var(--white);
+    }
+    .client-count {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--silver-dark);
+    }
+
+    /* Loading state */
+    .loading-state {
+      padding: 3rem; text-align: center;
+      color: var(--silver-dark); font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(255,255,255,0.04);
+      background: var(--black-soft);
+    }
+    .loading-dots::after {
+      content: ''; animation: dots 1.2s infinite;
+    }
+    @keyframes dots {
+      0%   { content: '.'; }
+      33%  { content: '..'; }
+      66%  { content: '...'; }
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 4rem 2rem; text-align: center;
+      border: 1px dashed rgba(201,168,76,0.15);
+      color: var(--silver-dark);
+    }
+    .empty-state p { font-size: 0.92rem; line-height: 1.7; }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    thead tr {
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+    }
+    thead th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--silver-dark); font-weight: 600;
+      padding: 0.9rem 1rem; text-align: left;
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.2s;
+    }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td {
+      padding: 1rem 1rem;
+      color: var(--silver);
+      vertical-align: middle;
+    }
+    tbody td.name-cell {
+      color: var(--white); font-weight: 400;
+    }
+    tbody td.business-cell {
+      color: var(--gold-light);
+    }
+    /* MVP badge */
+    .mvp-badge {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+    }
+    .mvp-yes {
+      background: rgba(46,125,94,0.15);
+      border: 1px solid rgba(61,168,120,0.3);
+      color: var(--success-light);
+    }
+    .mvp-no {
+      background: rgba(122,122,122,0.1);
+      border: 1px solid rgba(122,122,122,0.2);
+      color: var(--silver-dark);
+    }
+
+    /* Row action buttons */
+    .row-actions { display: flex; gap: 0.5rem; white-space: nowrap; }
+    .btn-edit, .btn-delete {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 0.35rem 0.9rem; border: 1px solid; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-edit {
+      background: transparent; border-color: rgba(201,168,76,0.3);
+      color: var(--gold);
+    }
+    .btn-edit:hover { background: var(--gold); color: var(--black); }
+    .btn-delete {
+      background: transparent; border-color: rgba(192,57,43,0.3);
+      color: var(--danger-light);
+    }
+    .btn-delete:hover { background: var(--danger); color: var(--white); }
+
+    /* ── CONFIRM MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--black-mid);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 2.5rem; max-width: 440px; width: 90%;
+      position: relative;
+      transform: translateY(12px); transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal::before {
+      content: ''; position: absolute; top: 0; left: 2rem;
+      width: 40px; height: 2px; background: var(--danger-light);
+    }
+    .modal h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 300; color: var(--white);
+      margin-bottom: 0.8rem;
+    }
+    .modal p { font-size: 0.9rem; color: var(--silver-dark); line-height: 1.6; margin-bottom: 2rem; }
+    .modal-actions { display: flex; gap: 0.8rem; }
+    .btn-confirm-delete {
+      background: var(--danger); color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 0.8rem 1.8rem; border: none; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-confirm-delete:hover { background: var(--danger-light); }
+
+    /* ── GOLD DIVIDER ── */
+    .gold-divider { width: 48px; height: 2px; background: var(--gold); margin: 1.4rem 0 2rem; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.6s both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      .page-wrap { padding: 7rem 2rem 4rem; }
+      .form-section { padding: 2rem 1.5rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full-width { grid-column: 1; }
+    }
+    @media (max-width: 580px) {
+      .list-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="index.html" class="nav-logo">Midsouth <span>Venture</span> Labs</a>
+    <ul class="nav-links">
+      <li><a href="index.html#value">Program</a></li>
+      <li><a href="startups.html">Startups</a></li>
+      <li><a href="index.html#investors">For Investors &amp; Partners</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="admin.html" class="active">Admin</a></li>
+    </ul>
+    <a href="index.html#apply" class="nav-cta">Apply Now</a>
+  </nav>
+
+  <!-- ── TOAST ── -->
+  <div id="toast" role="alert" aria-live="polite"></div>
+
+  <!-- ── DELETE CONFIRM MODAL ── -->
+  <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <h3 id="modalTitle">Confirm Delete</h3>
+      <p>Are you sure you want to delete this client? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn-confirm-delete" id="confirmDeleteBtn">Delete Client</button>
+        <button class="btn-cancel" id="cancelDeleteBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE CONTENT ── -->
+  <div class="page-wrap">
+
+    <!-- Page Header -->
+    <div class="page-header fade-up">
+      <div class="page-eyebrow">Admin Dashboard</div>
+      <h1 class="page-title">Client <em>Management</em></h1>
+    </div>
+
+    <!-- ── FORM SECTION ── -->
+    <div class="form-section fade-up" style="animation-delay:0.1s">
+      <div class="section-tag">Client Record</div>
+      <h2 id="formTitle">Add New Client</h2>
+      <div class="form-mode-badge" id="formModeBadge">Create Mode</div>
+
+      <!-- Hidden field for edit mode -->
+      <input type="hidden" id="editId" />
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="founder_name">Founder Name</label>
+          <input type="text" id="founder_name" placeholder="Jane Smith" />
+        </div>
+
+        <div class="form-group">
+          <label for="business_name">Business Name</label>
+          <input type="text" id="business_name" placeholder="Acme Co." />
+        </div>
+
+        <div class="form-group">
+          <label for="founder_email">Founder Email</label>
+          <input type="email" id="founder_email" placeholder="jane@acme.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="founder_phone_number">Phone Number</label>
+          <input type="tel" id="founder_phone_number" placeholder="+1 (901) 555-0100" />
+        </div>
+
+        <div class="form-group">
+          <label for="industry">Industry</label>
+          <select id="industry">
+            <option value="" disabled selected>Select industry…</option>
+            <option>AgriTech</option>
+            <option>CleanTech / Energy</option>
+            <option>Consumer Goods</option>
+            <option>E-Commerce</option>
+            <option>Education</option>
+            <option>FinTech</option>
+            <option>Food &amp; Beverage</option>
+            <option>Healthcare</option>
+            <option>Logistics</option>
+            <option>Manufacturing</option>
+            <option>Media &amp; Entertainment</option>
+            <option>PropTech</option>
+            <option>SaaS / Software</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="number_of_investors">Number of Investors</label>
+          <input type="number" id="number_of_investors" placeholder="0" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="number_of_pilots">Number of Pilots</label>
+          <input type="number" id="number_of_pilots" placeholder="0" min="0" />
+        </div>
+
+        <div class="form-group" style="align-self: end;">
+          <label>MVP Status</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="have_mvp" />
+            <label for="have_mvp">Has an MVP / Working Prototype</label>
+          </div>
+        </div>
+
+      </div><!-- /form-grid -->
+
+      <div class="form-actions">
+        <button class="btn-primary" id="submitBtn">Save Client →</button>
+        <button class="btn-cancel" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+      </div>
+    </div><!-- /form-section -->
+
+    <!-- ── CLIENT LIST ── -->
+    <div class="list-section fade-up" style="animation-delay:0.2s">
+      <div class="list-header">
+        <div>
+          <div class="section-tag">All Clients</div>
+          <h2>Cohort Clients</h2>
+        </div>
+        <div class="client-count" id="clientCount">Loading…</div>
+      </div>
+      <div class="gold-divider"></div>
+
+      <!-- Table container — populated by JS -->
+      <div id="clientList">
+        <div class="loading-state">
+          <span class="loading-dots">Loading clients</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-wrap -->
+
+  <!-- Footer -->
+  <footer style="background:var(--black);padding:2.5rem 4rem;border-top:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--silver-dark);">
+      Midsouth <span style="color:var(--gold);">Venture</span> Labs
+    </div>
+    <p style="font-size:0.78rem;color:var(--silver-dark);">Memphis, Tennessee · Mid‑South Region</p>
+    <p style="font-size:0.78rem;color:var(--silver-dark);">© 2025 Midsouth Venture Labs. All rights reserved.</p>
+  </footer>
+
+  <!-- ── SUPABASE SDK ── -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    /* ──────────────────────────────────────────────
+       SUPABASE CONFIG
+    ────────────────────────────────────────────── */
+    const SUPABASE_URL      = 'https://tacdeguqsjsebckzlpwz.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_cq5Lw5KViEIXzJOyXqWjMg_Spa2wmY-';
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    /* ──────────────────────────────────────────────
+       STATE
+    ────────────────────────────────────────────── */
+    let deleteTargetId = null;   // holds the id of the client pending deletion
+    let isEditMode     = false;  // tracks whether form is in create or edit mode
+
+    /* ──────────────────────────────────────────────
+       DOM REFERENCES
+    ────────────────────────────────────────────── */
+    const submitBtn      = document.getElementById('submitBtn');
+    const cancelEditBtn  = document.getElementById('cancelEditBtn');
+    const formTitle      = document.getElementById('formTitle');
+    const formModeBadge  = document.getElementById('formModeBadge');
+    const editIdField    = document.getElementById('editId');
+    const clientList     = document.getElementById('clientList');
+    const clientCount    = document.getElementById('clientCount');
+    const deleteModal    = document.getElementById('deleteModal');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn  = document.getElementById('cancelDeleteBtn');
+    const toast          = document.getElementById('toast');
+
+    /* ──────────────────────────────────────────────
+       TOAST HELPER
+       Shows a brief notification at bottom-right.
+    ────────────────────────────────────────────── */
+    let toastTimer;
+    function showToast(message, isError = false) {
+      toast.textContent = message;
+      toast.className   = isError ? 'show error' : 'show';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.className = ''; }, 3500);
+    }
+
+    /* ──────────────────────────────────────────────
+       FORM HELPERS — read / reset / populate
+    ────────────────────────────────────────────── */
+
+    /** Collect all form values into an object */
+    function getFormData() {
+      return {
+        founder_name:          document.getElementById('founder_name').value.trim(),
+        founder_phone_number:  document.getElementById('founder_phone_number').value.trim(),
+        founder_email:         document.getElementById('founder_email').value.trim(),
+        business_name:         document.getElementById('business_name').value.trim(),
+        industry:              document.getElementById('industry').value,
+        number_of_investors:   parseInt(document.getElementById('number_of_investors').value) || 0,
+        number_of_pilots:      parseInt(document.getElementById('number_of_pilots').value)    || 0,
+        have_mvp:              document.getElementById('have_mvp').checked,
+      };
+    }
+
+    /** Clear the form and switch back to Create mode */
+    function resetForm() {
+      document.getElementById('founder_name').value         = '';
+      document.getElementById('founder_phone_number').value = '';
+      document.getElementById('founder_email').value        = '';
+      document.getElementById('business_name').value        = '';
+      document.getElementById('industry').value             = '';
+      document.getElementById('number_of_investors').value  = '';
+      document.getElementById('number_of_pilots').value     = '';
+      document.getElementById('have_mvp').checked           = false;
+      editIdField.value = '';
+      setCreateMode();
+    }
+
+    /** Pre-fill the form with an existing client's data (Edit mode) */
+    function populateForm(client) {
+      document.getElementById('founder_name').value         = client.founder_name         || '';
+      document.getElementById('founder_phone_number').value = client.founder_phone_number || '';
+      document.getElementById('founder_email').value        = client.founder_email        || '';
+      document.getElementById('business_name').value        = client.business_name        || '';
+      document.getElementById('industry').value             = client.industry             || '';
+      document.getElementById('number_of_investors').value  = client.number_of_investors  ?? '';
+      document.getElementById('number_of_pilots').value     = client.number_of_pilots     ?? '';
+      document.getElementById('have_mvp').checked           = !!client.have_mvp;
+      editIdField.value = client.id;
+      setEditMode();
+    }
+
+    /** Switch UI to Create mode */
+    function setCreateMode() {
+      isEditMode = false;
+      formTitle.textContent       = 'Add New Client';
+      formModeBadge.textContent   = 'Create Mode';
+      formModeBadge.className     = 'form-mode-badge';
+      submitBtn.textContent       = 'Save Client →';
+      cancelEditBtn.style.display = 'none';
+    }
+
+    /** Switch UI to Edit mode */
+    function setEditMode() {
+      isEditMode = true;
+      formTitle.textContent       = 'Edit Client';
+      formModeBadge.textContent   = 'Edit Mode';
+      formModeBadge.className     = 'form-mode-badge edit-mode';
+      submitBtn.textContent       = 'Update Client →';
+      cancelEditBtn.style.display = 'inline-block';
+      // Scroll to form
+      document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ──────────────────────────────────────────────
+       FETCH & RENDER — load all clients from Supabase
+    ────────────────────────────────────────────── */
+    async function fetchClients() {
+      clientList.innerHTML = '<div class="loading-state"><span class="loading-dots">Loading clients</span></div>';
+      clientCount.textContent = 'Loading…';
+
+      const { data, error } = await db
+        .from('clients')
+        .select('*')
+        .order('id', { ascending: false });
+
+      if (error) {
+        clientList.innerHTML = `<div class="loading-state" style="color:var(--danger-light);">Error: ${error.message}</div>`;
+        clientCount.textContent = '–';
+        return;
+      }
+
+      clientCount.textContent = `${data.length} client${data.length !== 1 ? 's' : ''}`;
+
+      if (data.length === 0) {
+        clientList.innerHTML = `
+          <div class="empty-state">
+            <p>No clients yet. Use the form above to add your first client.</p>
+          </div>`;
+        return;
+      }
+
+      renderTable(data);
+    }
+
+    /** Build and insert the HTML table from client records */
+    function renderTable(clients) {
+      const rows = clients.map(c => `
+        <tr>
+          <td class="name-cell">${esc(c.founder_name)}</td>
+          <td class="business-cell">${esc(c.business_name)}</td>
+          <td>${esc(c.founder_email)}</td>
+          <td>${esc(c.founder_phone_number)}</td>
+          <td>${esc(c.industry)}</td>
+          <td style="text-align:center;">${c.number_of_investors ?? 0}</td>
+          <td style="text-align:center;">${c.number_of_pilots ?? 0}</td>
+          <td style="text-align:center;">
+            <span class="mvp-badge ${c.have_mvp ? 'mvp-yes' : 'mvp-no'}">
+              ${c.have_mvp ? 'Yes' : 'No'}
+            </span>
+          </td>
+          <td>
+            <div class="row-actions">
+              <button class="btn-edit"   onclick="editClient('${c.id}')">Edit</button>
+              <button class="btn-delete" onclick="requestDelete('${c.id}')">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      clientList.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Founder</th>
+                <th>Business</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Industry</th>
+                <th>Investors</th>
+                <th>Pilots</th>
+                <th>MVP</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    /** Escape HTML to prevent XSS in rendered table cells */
+    function esc(str) {
+      if (!str && str !== 0) return '—';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /* ──────────────────────────────────────────────
+       CREATE — insert a new client record
+    ────────────────────────────────────────────── */
+    async function createClientAccount(formData) {
+      const { error } = await db.from('clients').insert([formData]);
+      if (error) {
+        showToast(`Insert failed: ${error.message}`, true);
+        return;
+      }
+      showToast('Client added successfully.');
+      resetForm();
+      fetchClients();
+    }
+
+    /* ──────────────────────────────────────────────
+       UPDATE — edit an existing client record
+    ────────────────────────────────────────────── */
+    async function updateClient(id, formData) {
+      const { error } = await db
+        .from('clients')
+        .update(formData)
+        .eq('id', id);
+
+      if (error) {
+        showToast(`Update failed: ${error.message}`, true);
+        return;
+      }
+      showToast('Client updated successfully.');
+      resetForm();
+      fetchClients();
+    }
+
+    /* ──────────────────────────────────────────────
+       DELETE — remove a client record by id
+    ────────────────────────────────────────────── */
+    async function deleteClient(id) {
+      const { error } = await db
+        .from('clients')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        showToast(`Delete failed: ${error.message}`, true);
+        return;
+      }
+      showToast('Client deleted.');
+      fetchClients();
+    }
+
+    /* ──────────────────────────────────────────────
+       EDIT TRIGGER — fetch single record, populate form
+    ────────────────────────────────────────────── */
+    async function editClient(id) {
+      const { data, error } = await db
+        .from('clients')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error || !data) {
+        showToast('Could not load client data.', true);
+        return;
+      }
+      populateForm(data);
+    }
+
+    /* ──────────────────────────────────────────────
+       DELETE TRIGGER — open confirmation modal
+    ────────────────────────────────────────────── */
+    function requestDelete(id) {
+      deleteTargetId = id;
+      deleteModal.classList.add('open');
+    }
+
+    function closeDeleteModal() {
+      deleteTargetId = null;
+      deleteModal.classList.remove('open');
+    }
+
+    /* ──────────────────────────────────────────────
+       EVENT LISTENERS
+    ────────────────────────────────────────────── */
+
+    /** Form submit — decides between create and update */
+    submitBtn.addEventListener('click', () => {
+      const formData = getFormData();
+
+      // Basic validation
+      if (!formData.founder_name || !formData.founder_email) {
+        showToast('Founder name and email are required.', true);
+        return;
+      }
+
+      if (isEditMode && editIdField.value) {
+        updateClient(editIdField.value, formData);
+      } else {
+        createClientAccount(formData);
+      }
+    });
+
+    /** Cancel edit button — resets form to create mode */
+    cancelEditBtn.addEventListener('click', resetForm);
+
+    /** Confirm deletion */
+    confirmDeleteBtn.addEventListener('click', () => {
+      if (deleteTargetId) {
+        deleteClient(deleteTargetId);
+      }
+      closeDeleteModal();
+    });
+
+    /** Cancel deletion */
+    cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+
+    /** Close modal on overlay click */
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
+
+    /** Close modal on Escape key */
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && deleteModal.classList.contains('open')) {
+        closeDeleteModal();
+      }
+    });
+
+    /* ──────────────────────────────────────────────
+       INIT — load clients on page load
+    ────────────────────────────────────────────── */
+    fetchClients();
+  </script>
+
+</body>
+</html>

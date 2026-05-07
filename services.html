@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À La Carte Services — Midsouth Venture Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --black-mid: #111111;
+      --black-soft: #1a1a1a;
+      --silver-dark: #7a7a7a;
+      --silver: #a8a8a8;
+      --silver-light: #d0d0d0;
+      --silver-pale: #e8e8e8;
+      --gold: #c9a84c;
+      --gold-light: #e2c47a;
+      --gold-pale: #f0dba0;
+      --white: #f5f5f0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--silver-light);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--silver); text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--gold-light); }
+    .nav-cta {
+      background: transparent; border: 1px solid var(--gold);
+      color: var(--gold); padding: 0.55rem 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.25s, color 0.25s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; background: none; border: none;
+    }
+    .nav-hamburger span {
+      display: block; width: 24px; height: 1px; background: var(--silver-light);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,10,10,0.98); z-index: 99;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--silver-light); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--gold-light); }
+    .mobile-menu .mobile-cta {
+      background: var(--gold); color: var(--black);
+      padding: 0.8rem 2.4rem; font-weight: 600;
+    }
+
+    /* ── PAGE HERO ── */
+    #page-hero {
+      padding: 10rem 4rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .page-hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 70% 50%, rgba(201,168,76,0.05) 0%, transparent 65%),
+        var(--black);
+    }
+    .page-hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 100% 80% at 50% 0%, black 20%, transparent 75%);
+    }
+    .hero-line-accent {
+      position: absolute; top: 0; left: 50%; width: 1px; height: 100px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      z-index: 1;
+    }
+    .page-hero-inner {
+      position: relative; z-index: 2;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .page-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.6rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      animation: fadeUp 0.6s both;
+    }
+    .page-eyebrow::before {
+      content: ''; display: block; width: 32px; height: 1px; background: var(--gold);
+    }
+    .page-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 300; line-height: 1.1; color: var(--white);
+      animation: fadeUp 0.6s 0.1s both;
+    }
+    .page-headline em { font-style: italic; color: var(--gold-light); }
+    .page-sub {
+      margin-top: 1.6rem; max-width: 580px;
+      font-size: 1.05rem; line-height: 1.8; color: var(--silver);
+      animation: fadeUp 0.6s 0.2s both;
+    }
+
+    /* ── NOTICE BAND ── */
+    .notice-band {
+      background: rgba(201,168,76,0.06);
+      border-top: 1px solid rgba(201,168,76,0.2);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding: 1.4rem 4rem;
+    }
+    .notice-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+    }
+    .notice-icon {
+      width: 8px; height: 8px; background: var(--gold);
+      border-radius: 50%; flex-shrink: 0;
+    }
+    .notice-text {
+      font-size: 0.88rem; color: var(--silver); line-height: 1.6;
+    }
+    .notice-text strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── SERVICES GRID ── */
+    #services {
+      padding: 5rem 4rem 7rem;
+      background: var(--black);
+    }
+    .services-cap { max-width: 1100px; margin: 0 auto; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 3.5rem;
+    }
+
+    /* Featured (wide) card */
+    .service-card {
+      background: var(--black-soft);
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 2.6rem 2.2rem;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
+      animation: fadeUp 0.6s both;
+    }
+    .service-card:hover {
+      border-color: rgba(201,168,76,0.3);
+      transform: translateY(-4px);
+      z-index: 2;
+    }
+    .service-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .service-card:hover::before { opacity: 1; }
+
+    /* Accent line left */
+    .service-card::after {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 0;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+    .service-card:hover::after { width: 2px; }
+
+    .service-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.8rem; font-weight: 700;
+      color: rgba(201,168,76,0.06); line-height: 1;
+      position: absolute; top: 1.4rem; right: 1.6rem;
+      pointer-events: none;
+    }
+
+    .service-icon {
+      font-size: 1.6rem; margin-bottom: 1.2rem;
+      line-height: 1;
+    }
+
+    .service-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .service-tag::before {
+      content: ''; display: block; width: 16px; height: 1px; background: var(--gold);
+    }
+
+    .service-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--white);
+      margin-bottom: 1rem; line-height: 1.3;
+    }
+
+    .service-what {
+      font-size: 0.88rem; line-height: 1.75; color: var(--silver);
+      margin-bottom: 1rem; flex-grow: 1;
+    }
+
+    .service-value {
+      background: rgba(201,168,76,0.05);
+      border-left: 2px solid rgba(201,168,76,0.3);
+      padding: 0.8rem 1rem;
+      margin-bottom: 1.6rem;
+    }
+    .service-value-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--silver-dark); margin-bottom: 0.3rem;
+    }
+    .service-value-text {
+      font-size: 0.84rem; line-height: 1.65; color: var(--silver);
+      font-style: italic;
+    }
+
+    .service-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: auto; padding-top: 1.4rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .service-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 600; color: var(--gold-light);
+      line-height: 1;
+    }
+    .service-price-note {
+      font-size: 0.7rem; color: var(--silver-dark); margin-top: 0.2rem;
+    }
+    .service-cta {
+      background: transparent; border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold); padding: 0.55rem 1.3rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+      white-space: nowrap;
+    }
+    .service-cta:hover {
+      background: var(--gold); color: var(--black); border-color: var(--gold);
+    }
+
+    /* Retainer card — featured */
+    .service-card.featured {
+      grid-column: span 3;
+      flex-direction: row; align-items: stretch;
+      gap: 0;
+      background: rgba(201,168,76,0.04);
+      border-color: rgba(201,168,76,0.18);
+    }
+    .featured-left {
+      flex: 1; padding: 2.6rem 2.4rem;
+      border-right: 1px solid rgba(201,168,76,0.12);
+    }
+    .featured-right {
+      width: 320px; flex-shrink: 0;
+      padding: 2.6rem 2.4rem;
+      display: flex; flex-direction: column; justify-content: center;
+      background: rgba(201,168,76,0.03);
+    }
+    .featured-badge {
+      display: inline-block;
+      background: var(--gold); color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 0.3rem 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+    .featured-includes {
+      list-style: none; display: flex; flex-direction: column; gap: 0.7rem;
+      margin-bottom: 2rem;
+    }
+    .featured-includes li {
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      font-size: 0.88rem; color: var(--silver); line-height: 1.5;
+    }
+    .featured-includes li::before {
+      content: '→'; color: var(--gold); flex-shrink: 0;
+    }
+    .featured-price-block {
+      text-align: center; margin-bottom: 1.6rem;
+    }
+    .featured-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem; font-weight: 600; color: var(--gold-light);
+      display: block; line-height: 1;
+    }
+    .featured-price-per {
+      font-size: 0.8rem; color: var(--silver-dark); margin-top: 0.3rem;
+    }
+    .btn-featured {
+      display: block; text-align: center;
+      background: var(--gold); color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 1rem 2rem;
+      transition: background 0.25s;
+    }
+    .btn-featured:hover { background: var(--gold-light); }
+
+    /* ── BUNDLE BAND ── */
+    #bundles {
+      background: var(--black-mid);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+      padding: 5rem 4rem;
+    }
+    .bundles-cap { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    .section-tag::before {
+      content: ''; width: 24px; height: 1px; background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 300; color: var(--white); line-height: 1.2;
+    }
+    .gold-divider {
+      width: 48px; height: 2px; background: var(--gold); margin: 1.6rem 0;
+    }
+
+    .bundles-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+      margin-top: 3rem;
+    }
+    .bundle-card {
+      background: var(--black-soft);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 2.4rem 2rem;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .bundle-card:hover { border-color: rgba(201,168,76,0.25); }
+    .bundle-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    .bundle-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--white); margin-bottom: 0.5rem;
+    }
+    .bundle-desc {
+      font-size: 0.88rem; color: var(--silver-dark); margin-bottom: 1.4rem; line-height: 1.6;
+    }
+    .bundle-items {
+      list-style: none; display: flex; flex-direction: column; gap: 0.5rem;
+      margin-bottom: 1.6rem;
+    }
+    .bundle-items li {
+      font-size: 0.84rem; color: var(--silver);
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+    .bundle-items li::before { content: '·'; color: var(--gold); font-size: 1.2rem; }
+    .bundle-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 1.2rem; border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .bundle-savings {
+      font-size: 0.78rem; color: var(--silver-dark);
+    }
+    .bundle-savings strong { color: var(--gold); }
+    .bundle-link {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .bundle-link:hover { color: var(--gold-light); }
+
+    /* ── CTA BAND ── */
+    #contact {
+      background: var(--black);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      padding: 7rem 4rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .cta-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #contact .section-tag { justify-content: center; }
+    #contact .section-title { margin-bottom: 1rem; }
+    #contact p {
+      font-size: 1.05rem; color: var(--silver-dark); margin-bottom: 2.5rem;
+      max-width: 520px; margin-left: auto; margin-right: auto;
+    }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold); color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 1rem 2.4rem;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-block;
+      background: transparent; color: var(--silver-light);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 1rem 2rem;
+      border: 1px solid rgba(168,168,168,0.35);
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .btn-secondary:hover { border-color: var(--silver-light); color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black); padding: 2.5rem 4rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 0.9rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--silver-dark);
+    }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: 0.78rem; color: var(--silver-dark); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .service-card:nth-child(1) { animation-delay: 0.05s; }
+    .service-card:nth-child(2) { animation-delay: 0.12s; }
+    .service-card:nth-child(3) { animation-delay: 0.19s; }
+    .service-card:nth-child(4) { animation-delay: 0.26s; }
+    .service-card:nth-child(5) { animation-delay: 0.33s; }
+    .service-card:nth-child(6) { animation-delay: 0.40s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .service-card.featured { grid-column: span 2; }
+    }
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      #page-hero { padding: 8rem 2rem 4rem; }
+      #services { padding: 4rem 2rem 5rem; }
+      #bundles { padding: 4rem 2rem; }
+      #contact { padding: 5rem 2rem; }
+      .notice-band { padding: 1.2rem 2rem; }
+      footer { padding: 2rem; flex-direction: column; text-align: center; }
+      .bundles-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .services-grid { grid-template-columns: 1fr; gap: 2px; }
+      .service-card.featured {
+        grid-column: span 1;
+        flex-direction: column;
+      }
+      .featured-left { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.12); }
+      .featured-right { width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .service-footer { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .service-cta { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Midsouth <span>Venture</span> Labs</a>
+    <ul class="nav-links">
+      <li><a href="index.html#value">Program</a></li>
+      <li><a href="index.html#who">Startups</a></li>
+      <li><a href="services.html" class="active">Services</a></li>
+      <li><a href="index.html#investors">For Investors &amp; Partners</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="mailto:apply@midsouthventurelabs.com" class="nav-cta">Apply Now</a>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#value" onclick="closeMenu()">Program</a>
+    <a href="index.html#who" onclick="closeMenu()">Startups</a>
+    <a href="services.html" onclick="closeMenu()">Services</a>
+    <a href="index.html#investors" onclick="closeMenu()">For Investors &amp; Partners</a>
+    <a href="about.html" onclick="closeMenu()">About</a>
+    <a href="mailto:apply@midsouthventurelabs.com" class="mobile-cta">Apply Now</a>
+  </div>
+
+  <!-- PAGE HERO -->
+  <section id="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="page-hero-grid"></div>
+    <div class="hero-line-accent"></div>
+    <div class="page-hero-inner">
+      <div class="page-eyebrow">À La Carte Services</div>
+      <h1 class="page-headline">
+        Targeted Help.<br><em>Exactly When</em><br>You Need It.
+      </h1>
+      <p class="page-sub">
+        Not every founder needs a full 12-week cohort. These services give you access to MVL expertise — on the specific challenges that are blocking your progress right now.
+      </p>
+    </div>
+  </section>
+
+  <!-- NOTICE BAND -->
+  <div class="notice-band">
+    <div class="notice-inner">
+      <div class="notice-icon"></div>
+      <p class="notice-text">
+        All services are available to founders inside and outside the cohort program.
+        <strong>Bundle any 2–3 services for a 15% discount.</strong>
+        Reach out to discuss what's right for your stage.
+      </p>
+    </div>
+  </div>
+
+  <!-- SERVICES GRID -->
+  <section id="services">
+    <div class="services-cap">
+
+      <div class="section-tag">Six Services</div>
+      <h2 class="section-title">Pick What Your<br>Startup Needs Most</h2>
+      <div class="gold-divider"></div>
+
+      <div class="services-grid">
+
+        <!-- 01 -->
+        <div class="service-card">
+          <div class="service-number">01</div>
+          <div class="service-icon">🎯</div>
+          <div class="service-tag">Pitch</div>
+          <div class="service-title">Pitch Audit &amp; Teardown</div>
+          <div class="service-what">
+            A 90-minute deep-dive where we tear your existing deck apart slide by slide — narrative arc, financials, market sizing, ask — and hand you a written critique with a prioritized fix list.
+          </div>
+          <div class="service-value">
+            <div class="service-value-label">Why It Matters</div>
+            <div class="service-value-text">Most founders waste months pitching a broken story. This collapses that into one session.</div>
+          </div>
+          <div class="service-footer">
+            <div>
+              <div class="service-price">$750</div>
+              <div class="service-price-note">One-time engagement</div>
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Pitch Audit Inquiry" class="service-cta">Get Started →</a>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="service-card">
+          <div class="service-number">02</div>
+          <div class="service-icon">📊</div>
+          <div class="service-tag">Fundraising</div>
+          <div class="service-title">Investor-Ready Deck Build</div>
+          <div class="service-what">
+            We co-build your pitch deck from scratch — 10–12 slides, investor-grade design, compelling narrative. Includes two rounds of revisions.
+          </div>
+          <div class="service-value">
+            <div class="service-value-label">Why It Matters</div>
+            <div class="service-value-text">There's a huge gap between a deck and an investor deck. This closes it.</div>
+          </div>
+          <div class="service-footer">
+            <div>
+              <div class="service-price">$2,500</div>
+              <div class="service-price-note">Includes 2 revision rounds</div>
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Deck Build Inquiry" class="service-cta">Get Started →</a>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="service-card">
+          <div class="service-number">03</div>
+          <div class="service-icon">🤝</div>
+          <div class="service-tag">Investor Access</div>
+          <div class="service-title">Warm Investor Intro Package</div>
+          <div class="service-what">
+            We review your materials, identify the right 5–10 investors from our Mid-South network — angels, family offices, early-stage VCs — and make warm, contextualized introductions on your behalf.
+          </div>
+          <div class="service-value">
+            <div class="service-value-label">Why It Matters</div>
+            <div class="service-value-text">Cold outreach gets ignored. A warm intro from a trusted voice gets meetings.</div>
+          </div>
+          <div class="service-footer">
+            <div>
+              <div class="service-price">$1,500</div>
+              <div class="service-price-note">Or success-based fee structure</div>
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Investor Intro Inquiry" class="service-cta">Get Started →</a>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="service-card">
+          <div class="service-number">04</div>
+          <div class="service-icon">🏢</div>
+          <div class="service-tag">Pilots</div>
+          <div class="service-title">Corporate Pilot Prep &amp; Matchmaking</div>
+          <div class="service-what">
+            We prepare your pilot proposal — scope, pricing, success metrics, legal basics — then work our corporate partner network in the Mid-South to find the right pilot match.
+          </div>
+          <div class="service-value">
+            <div class="service-value-label">Why It Matters</div>
+            <div class="service-value-text">Enterprise pilots are validation gold for fundraising. We've opened these doors before — they require a different sales motion.</div>
+          </div>
+          <div class="service-footer">
+            <div>
+              <div class="service-price">$2,000</div>
+              <div class="service-price-note">Plus potential rev-share with partners</div>
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Pilot Prep Inquiry" class="service-cta">Get Started →</a>
+          </div>
+        </div>
+
+        <!-- 05 -->
+        <div class="service-card">
+          <div class="service-number">05</div>
+          <div class="service-icon">🎤</div>
+          <div class="service-tag">Stage Readiness</div>
+          <div class="service-title">Demo Day / Pitch Competition Prep</div>
+          <div class="service-what">
+            Full preparation for a specific upcoming pitch event — scripted narrative, Q&amp;A prep, mock investor panel, and a final polish session.
+          </div>
+          <div class="service-value">
+            <div class="service-value-label">Why It Matters</div>
+            <div class="service-value-text">The gap between winner and runner-up is almost always stage readiness. We turn your content into a performance.</div>
+          </div>
+          <div class="service-footer">
+            <div>
+              <div class="service-price">$1,000</div>
+              <div class="service-price-note">Event-specific engagement</div>
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Demo Day Prep Inquiry" class="service-cta">Get Started →</a>
+          </div>
+        </div>
+
+        <!-- 06 — FEATURED RETAINER (spans full row) -->
+        <div class="service-card featured">
+          <div class="featured-left">
+            <div class="featured-badge">Most Popular</div>
+            <div class="service-tag">Monthly Retainer</div>
+            <div class="service-title" style="font-size:1.3rem;">🧭 &nbsp;Founder Strategy Session</div>
+            <div class="service-what" style="max-width:560px; font-size:0.92rem; margin-top:0.8rem;">
+              Two 60-minute sessions per month with a senior MVL advisor — open agenda. Fundraising strategy, team dynamics, product decisions, investor follow-up, whatever's most pressing that month.
+            </div>
+            <div class="service-value" style="max-width:520px; margin-top:1.2rem;">
+              <div class="service-value-label">Why It Matters</div>
+              <div class="service-value-text">Founders need a trusted thought partner on speed dial, not just a one-time workshop. This is the "co-founder for hire" option — especially powerful for solo founders navigating critical decisions alone.</div>
+            </div>
+          </div>
+          <div class="featured-right">
+            <ul class="featured-includes">
+              <li>2 × 60-min advisor sessions per month</li>
+              <li>Open agenda — your priorities drive it</li>
+              <li>Asynchronous follow-up between sessions</li>
+              <li>Access to MVL network and resources</li>
+              <li>Cancel anytime, no long-term lock-in</li>
+            </ul>
+            <div class="featured-price-block">
+              <span class="featured-price">$800</span>
+              <div class="featured-price-per">per month · cancel anytime</div>
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Monthly Retainer Inquiry" class="btn-featured">Start This Month →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BUNDLES -->
+  <section id="bundles">
+    <div class="bundles-cap">
+      <div class="section-tag">Save More</div>
+      <h2 class="section-title">Bundle &amp; Save 15%</h2>
+      <div class="gold-divider"></div>
+      <p style="font-size:0.95rem; color:var(--silver-dark); max-width:540px; margin-bottom:0; line-height:1.75;">
+        Combine services that work together and we'll discount the package. These are our most common pairings — or build your own.
+      </p>
+
+      <div class="bundles-grid" style="margin-top:2.5rem;">
+
+        <div class="bundle-card">
+          <div class="bundle-name">Fundraise Ready Bundle</div>
+          <div class="bundle-desc">Everything you need to walk into your first investor meetings with confidence.</div>
+          <ul class="bundle-items">
+            <li>Pitch Audit &amp; Teardown</li>
+            <li>Investor-Ready Deck Build</li>
+            <li>Warm Investor Intro Package</li>
+          </ul>
+          <div class="bundle-footer">
+            <div class="bundle-savings">
+              Save <strong>~$705</strong> vs. à la carte
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Fundraise Ready Bundle" class="bundle-link">Inquire →</a>
+          </div>
+        </div>
+
+        <div class="bundle-card">
+          <div class="bundle-name">Launch Ready Bundle</div>
+          <div class="bundle-desc">For founders approaching a pitch event or Demo Day with a lot riding on it.</div>
+          <ul class="bundle-items">
+            <li>Pitch Audit &amp; Teardown</li>
+            <li>Demo Day / Pitch Competition Prep</li>
+            <li>Warm Investor Intro Package</li>
+          </ul>
+          <div class="bundle-footer">
+            <div class="bundle-savings">
+              Save <strong>~$487</strong> vs. à la carte
+            </div>
+            <a href="mailto:apply@midsouthventurelabs.com?subject=Launch Ready Bundle" class="bundle-link">Inquire →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact">
+    <div class="cta-glow"></div>
+    <div style="position:relative; z-index:1;">
+      <div class="section-tag">Get Started</div>
+      <h2 class="section-title">Not Sure Where<br>to Begin?</h2>
+      <p>
+        Reach out and we'll tell you honestly which service — or combination — is right for where you are right now. No pressure, no sales pitch.
+      </p>
+      <div class="cta-actions">
+        <a href="mailto:apply@midsouthventurelabs.com" class="btn-primary">Talk to MVL →</a>
+        <a href="index.html#apply" class="btn-secondary">Apply to Full Program</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Midsouth <span>Venture</span> Labs</div>
+    <p>Memphis, Tennessee · Mid‑South Region</p>
+    <p>© 2025 Midsouth Venture Labs. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    function closeMenu() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+  </script>
+
+</body>
+</html>

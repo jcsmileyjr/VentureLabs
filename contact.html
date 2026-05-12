@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Midsouth Venture Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black:        #0a0a0a;
+      --black-mid:    #111111;
+      --black-soft:   #1a1a1a;
+      --navy:         #0d1b2a;
+      --navy-mid:     #112236;
+      --silver-dark:  #7a7a7a;
+      --silver:       #a8a8a8;
+      --silver-light: #d0d0d0;
+      --gold:         #c9a84c;
+      --gold-light:   #e2c47a;
+      --gold-pale:    #f0dba0;
+      --white:        #f5f5f0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--silver-light);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(10,10,10,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--silver); text-decoration: none; transition: color 0.25s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold-light); }
+    .nav-cta {
+      background: transparent; border: 1px solid var(--gold);
+      color: var(--gold); padding: 0.55rem 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      text-decoration: none; transition: background 0.25s, color 0.25s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      min-height: 46vh;
+      display: flex; align-items: flex-end;
+      padding: 10rem 4rem 5rem;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .header-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 65% 90% at 85% 60%, rgba(13,27,42,0.95) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 60% at 15% 40%, rgba(201,168,76,0.05) 0%, transparent 55%),
+        var(--navy);
+    }
+    .header-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 110% 100% at 50% 100%, black 40%, transparent 80%);
+    }
+    .header-line {
+      position: absolute; top: 0; left: 50%;
+      width: 1px; height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+    }
+    /* Decorative bracket corner */
+    .header-corner {
+      position: absolute; bottom: 3rem; right: 4rem;
+      width: 64px; height: 64px;
+      border-bottom: 2px solid rgba(201,168,76,0.3);
+      border-right: 2px solid rgba(201,168,76,0.3);
+    }
+    .header-inner {
+      position: relative; z-index: 2;
+      max-width: 1100px; width: 100%;
+    }
+    .page-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .page-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--gold); }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 300; line-height: 1.05; color: var(--white);
+    }
+    .page-title em { font-style: italic; color: var(--gold-light); }
+    .page-subtitle {
+      margin-top: 1.2rem; max-width: 500px;
+      font-size: 1rem; line-height: 1.75; color: var(--silver);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .contact-body {
+      max-width: 1100px; margin: 0 auto;
+      padding: 6rem 4rem 7rem;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    /* ── LEFT — INFO COLUMN ── */
+    .section-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    .section-tag::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+
+    .col-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 300; color: var(--white); line-height: 1.25;
+      margin-bottom: 1.4rem;
+    }
+    .col-title em { font-style: italic; color: var(--gold-light); }
+    .col-body {
+      font-size: 1rem; line-height: 1.8; color: var(--silver);
+      margin-bottom: 3rem;
+    }
+    .col-body strong { color: var(--white); font-weight: 500; }
+
+    /* Contact detail cards */
+    .contact-cards { display: flex; flex-direction: column; gap: 2px; }
+    .contact-card {
+      background: var(--black-soft);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 1.6rem 1.8rem;
+      display: flex; align-items: flex-start; gap: 1.2rem;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .contact-card:hover { border-color: rgba(201,168,76,0.25); }
+    .contact-card::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--gold); opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .contact-card:hover::before { opacity: 1; }
+    .cc-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cc-icon svg {
+      width: 18px; height: 18px;
+      stroke: var(--gold); fill: none; stroke-width: 1.5;
+    }
+    .cc-content { flex: 1; }
+    .cc-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--silver-dark); margin-bottom: 0.3rem;
+    }
+    .cc-value {
+      font-size: 0.98rem; color: var(--white); font-weight: 400;
+    }
+    .cc-value a {
+      color: var(--white); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .cc-value a:hover { color: var(--gold-light); }
+    .cc-sub {
+      font-size: 0.8rem; color: var(--silver-dark); margin-top: 0.2rem;
+    }
+
+    /* Hours status pill */
+    .hours-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      margin-top: 0.5rem;
+      border: 1px solid;
+    }
+    .hours-status.open {
+      color: #6fcf97; border-color: rgba(111,207,151,0.3);
+      background: rgba(111,207,151,0.06);
+    }
+    .hours-status.closed {
+      color: var(--silver-dark); border-color: rgba(255,255,255,0.08);
+    }
+    .hours-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* ── RIGHT — FORM COLUMN ── */
+    .form-panel {
+      background: var(--navy-mid);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 3rem;
+      position: relative;
+    }
+    .form-panel::after {
+      content: ''; position: absolute;
+      bottom: -6px; right: -6px;
+      width: 48px; height: 48px;
+      border-bottom: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+    }
+    .form-panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem; font-weight: 300; color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .form-panel-sub {
+      font-size: 0.88rem; color: var(--silver-dark); margin-bottom: 2.2rem;
+      line-height: 1.6;
+    }
+
+    /* Form fields */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.2rem; }
+    .form-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--silver-dark);
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white);
+      padding: 0.75rem 1rem;
+      font-family: 'Barlow', sans-serif; font-size: 0.9rem; font-weight: 300;
+      outline: none; width: 100%;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: rgba(168,168,168,0.4); }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: rgba(201,168,76,0.5);
+      background: rgba(201,168,76,0.03);
+    }
+    .form-select {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a7a7a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+    .form-select option { background: #1a1a2e; }
+    .form-textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%; margin-top: 0.5rem;
+      background: var(--gold); color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1.1rem 2rem; border: none; cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit svg {
+      display: inline-block; vertical-align: middle;
+      margin-left: 0.5rem; width: 16px; height: 16px;
+      stroke: var(--black); fill: none; stroke-width: 2;
+    }
+
+    /* Form success state */
+    .form-success {
+      display: none;
+      text-align: center; padding: 3rem 1rem;
+    }
+    .form-success.visible { display: block; }
+    .form-success-icon {
+      width: 56px; height: 56px; margin: 0 auto 1.4rem;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .form-success-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+    .form-success h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; color: var(--white); margin-bottom: 0.6rem;
+    }
+    .form-success p { font-size: 0.9rem; color: var(--silver-dark); line-height: 1.6; }
+    .form-fields { transition: opacity 0.3s; }
+    .form-fields.hidden { display: none; }
+
+    /* ── MAP STRIP ── */
+    .region-strip {
+      background: var(--black-mid);
+      border-top: 1px solid rgba(201,168,76,0.08);
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      padding: 4rem;
+    }
+    .region-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1.6fr; gap: 4rem;
+      align-items: center;
+    }
+    .region-copy .section-tag { margin-bottom: 0.8rem; }
+    .region-copy h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 300; color: var(--white); line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .region-copy p {
+      font-size: 0.95rem; line-height: 1.75; color: var(--silver);
+    }
+    .region-map {
+      position: relative;
+      background: var(--navy);
+      border: 1px solid rgba(201,168,76,0.12);
+      height: 220px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    /* SVG mid-south region illustration */
+    .region-map svg { width: 100%; height: 100%; }
+    .region-tags {
+      margin-top: 1.4rem;
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .region-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold-light);
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.18);
+      padding: 0.3rem 0.8rem;
+    }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      padding: 6rem 4rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 300px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+    .cta-band .section-tag { justify-content: center; }
+    .cta-band h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300; color: var(--white); line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .cta-band h2 em { font-style: italic; color: var(--gold-light); }
+    .cta-band p { font-size: 1rem; color: var(--silver-dark); margin-bottom: 2.4rem; line-height: 1.7; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold); color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.92rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 1rem 2.4rem; transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-block;
+      background: transparent; color: var(--silver-light);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 1rem 2rem;
+      border: 1px solid rgba(168,168,168,0.35);
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .btn-outline:hover { border-color: var(--silver-light); color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black); padding: 2.5rem 4rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 0.9rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--silver-dark);
+    }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: 0.78rem; color: var(--silver-dark); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.65s both; }
+    .d1 { animation-delay: 0.1s; }
+    .d2 { animation-delay: 0.25s; }
+    .d3 { animation-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      .page-header { padding: 8rem 2rem 4rem; }
+      .contact-body { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 2rem 5rem; }
+      .region-strip, .cta-band { padding-left: 2rem; padding-right: 2rem; }
+      .region-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { padding: 2rem; flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 500px) {
+      .form-panel { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Midsouth <span>Venture</span> Labs</a>
+    <ul class="nav-links">
+      <li><a href="index.html#value">Program</a></li>
+      <li><a href="startups.html">Startups</a></li>
+      <li><a href="index.html#investors">For Investors &amp; Partners</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a href="index.html#apply" class="nav-cta">Apply Now</a>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="header-bg"></div>
+    <div class="header-grid"></div>
+    <div class="header-line"></div>
+    <div class="header-corner"></div>
+    <div class="header-inner">
+      <div class="page-eyebrow fade-up">Get in Touch</div>
+      <h1 class="page-title fade-up d1">Let's Build<br>Something <em>Together</em></h1>
+      <p class="page-subtitle fade-up d2">Whether you're a founder ready to apply, an investor looking to get involved, or a corporate partner exploring pilots — we want to hear from you.</p>
+    </div>
+  </header>
+
+  <!-- CONTACT BODY -->
+  <div class="contact-body">
+
+    <!-- LEFT: INFO -->
+    <div>
+      <div class="section-tag">Reach Us Directly</div>
+      <h2 class="col-title">We're Here<br>for <em>Founders First</em></h2>
+      <p class="col-body">
+        Midsouth Venture Labs is a hands-on accelerator — which means we're <strong>accessible, responsive, and real</strong>. No automated runaround. Reach out and a human being will get back to you.
+      </p>
+
+      <div class="contact-cards">
+
+        <!-- Email -->
+        <div class="contact-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="cc-content">
+            <div class="cc-label">Email</div>
+            <div class="cc-value"><a href="mailto:jsmiley@midsouthventurelabs.com">jsmiley@midsouthventurelabs.com</a></div>
+            <div class="cc-sub">We respond within one business day</div>
+          </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="contact-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="cc-content">
+            <div class="cc-label">Business Hours</div>
+            <div class="cc-value">Monday – Friday, 10:00 AM – 6:00 PM CT</div>
+            <div id="hours-status" class="hours-status closed">
+              <span class="hours-dot"></span>
+              <span id="hours-text">Checking hours…</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="contact-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="cc-content">
+            <div class="cc-label">Region Served</div>
+            <div class="cc-value">Memphis, Tennessee &amp; Mid-South</div>
+            <div class="cc-sub">Serving founders across TN, MS, AR, and beyond</div>
+          </div>
+        </div>
+
+        <!-- Program -->
+        <div class="contact-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="cc-content">
+            <div class="cc-label">Applications</div>
+            <div class="cc-value">Rolling admissions — cohort seats limited</div>
+            <div class="cc-sub">Early applications are strongly encouraged</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: FORM -->
+    <div class="form-panel">
+      <div class="form-fields" id="form-fields">
+        <div class="form-panel-title">Send Us a Message</div>
+        <p class="form-panel-sub">Tell us a little about yourself and what you're working on. We'll be in touch shortly.</p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="f-name">First Name</label>
+            <input class="form-input" id="f-name" type="text" placeholder="James" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="f-last">Last Name</label>
+            <input class="form-input" id="f-last" type="text" placeholder="Smith" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-email">Email Address</label>
+          <input class="form-input" id="f-email" type="email" placeholder="you@company.com" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-role">I Am A…</label>
+          <select class="form-select" id="f-role">
+            <option value="">Select your role</option>
+            <option value="founder">Founder / Entrepreneur</option>
+            <option value="investor">Investor / Angel</option>
+            <option value="corporate">Corporate Partner</option>
+            <option value="media">Press / Media</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-company">Company / Startup Name</label>
+          <input class="form-input" id="f-company" type="text" placeholder="Your company (if applicable)" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="f-message">Message</label>
+          <textarea class="form-textarea" id="f-message" placeholder="Tell us what you're building, what you need, or how you'd like to get involved…"></textarea>
+        </div>
+
+        <button class="btn-submit" onclick="handleSubmit()">
+          Send Message
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <!-- Success state -->
+      <div class="form-success" id="form-success">
+        <div class="form-success-icon">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Message Received</h3>
+        <p>Thanks for reaching out. We'll be back in touch within one business day.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REGION STRIP -->
+  <div class="region-strip">
+    <div class="region-inner">
+      <div class="region-copy">
+        <div class="section-tag">Our Footprint</div>
+        <h2>Rooted in Memphis.<br>Reaching the Region.</h2>
+        <p>Midsouth Venture Labs is based in Memphis, Tennessee — the economic and cultural heart of the Mid-South. Our accelerator program serves founders across the greater region, including West Tennessee, Northern Mississippi, and Eastern Arkansas.</p>
+        <div class="region-tags">
+          <span class="region-tag">Memphis, TN</span>
+          <span class="region-tag">West Tennessee</span>
+          <span class="region-tag">North Mississippi</span>
+          <span class="region-tag">East Arkansas</span>
+          <span class="region-tag">Mid-South Region</span>
+        </div>
+      </div>
+      <div class="region-map">
+        <!-- Stylized Mid-South SVG map -->
+        <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <!-- Grid lines -->
+          <defs>
+            <pattern id="mapgrid" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(201,168,76,0.07)" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="480" height="220" fill="url(#mapgrid)"/>
+
+          <!-- AR region -->
+          <path d="M 60 40 L 175 40 L 175 170 L 60 170 Z" fill="rgba(13,27,42,0.7)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <!-- TN region -->
+          <path d="M 175 40 L 400 40 L 400 120 L 175 120 Z" fill="rgba(13,27,42,0.85)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <!-- MS region -->
+          <path d="M 175 120 L 340 120 L 340 190 L 175 190 Z" fill="rgba(13,27,42,0.7)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+
+          <!-- Memphis dot (highlighted) -->
+          <circle cx="188" cy="112" r="10" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.5)" stroke-width="1">
+            <animate attributeName="r" values="10;14;10" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.5;1" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="188" cy="112" r="4" fill="var(--gold)"/>
+
+          <!-- Region labels -->
+          <text x="105" y="112" fill="rgba(201,168,76,0.4)" font-family="'Barlow Condensed', sans-serif" font-size="11" letter-spacing="2" text-anchor="middle" text-transform="uppercase">ARKANSAS</text>
+          <text x="295" y="88" fill="rgba(201,168,76,0.4)" font-family="'Barlow Condensed', sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">TENNESSEE</text>
+          <text x="258" y="160" fill="rgba(201,168,76,0.4)" font-family="'Barlow Condensed', sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">MISSISSIPPI</text>
+
+          <!-- Memphis label -->
+          <text x="188" y="100" fill="var(--gold)" font-family="'Barlow Condensed', sans-serif" font-size="10" letter-spacing="1.5" text-anchor="middle" font-weight="700">MEMPHIS</text>
+
+          <!-- Radius ring -->
+          <circle cx="188" cy="112" r="55" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="1" stroke-dasharray="4 4"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA BAND -->
+  <div class="cta-band">
+    <div class="cta-glow"></div>
+    <div class="cta-inner">
+      <div class="section-tag">Ready to Move?</div>
+      <h2>Stop Waiting.<br><em>Start Building.</em></h2>
+      <p>The next cohort of Midsouth Venture Labs is forming now. If you're an early-stage founder in the Mid-South, this is your moment.</p>
+      <div class="cta-buttons">
+        <a href="mailto:jsmiley@midsouthventurelabs.com?subject=Program Application — Midsouth Venture Labs" class="btn-primary">Apply to the Program →</a>
+        <a href="about.html" class="btn-outline">Learn Our Story</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Midsouth <span>Venture</span> Labs</div>
+    <p>Memphis, Tennessee · Mid‑South Region</p>
+    <p>© 2025 Midsouth Venture Labs. All rights reserved.</p>
+  </footer>
+
+  <script>
+    /* ── LIVE HOURS STATUS ── */
+    (function () {
+      const statusEl = document.getElementById('hours-status');
+      const textEl   = document.getElementById('hours-text');
+      const now      = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+      const day      = now.getDay();   // 0 Sun – 6 Sat
+      const hour     = now.getHours();
+      const min      = now.getMinutes();
+      const time     = hour + min / 60;
+      const isWeekday = day >= 1 && day <= 5;
+      const isOpen    = isWeekday && time >= 10 && time < 18;
+
+      if (isOpen) {
+        statusEl.classList.replace('closed', 'open');
+        textEl.textContent = 'Open Now — closes at 6:00 PM CT';
+      } else {
+        const msgs = {
+          0: 'Closed — reopens Monday at 10:00 AM',
+          6: 'Closed — reopens Monday at 10:00 AM',
+        };
+        textEl.textContent = msgs[day] || (time < 10 ? 'Closed — opens at 10:00 AM CT today' : 'Closed — reopens tomorrow at 10:00 AM CT');
+      }
+    })();
+
+    /* ── FORM SUBMIT (front-end demo; wire to backend / Formspree as needed) ── */
+    function handleSubmit() {
+      const name    = document.getElementById('f-name').value.trim();
+      const email   = document.getElementById('f-email').value.trim();
+      const message = document.getElementById('f-message').value.trim();
+
+      if (!name || !email || !message) {
+        const first = !name ? 'f-name' : !email ? 'f-email' : 'f-message';
+        document.getElementById(first).focus();
+        document.getElementById(first).style.borderColor = 'rgba(255,100,100,0.6)';
+        setTimeout(() => document.getElementById(first).style.borderColor = '', 2000);
+        return;
+      }
+
+      document.getElementById('form-fields').classList.add('hidden');
+      document.getElementById('form-success').classList.add('visible');
+    }
+  </script>
+
+</body>
+</html>

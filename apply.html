@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply — Midsouth Venture Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --black:        #0a0a0a;
+      --black-mid:    #111111;
+      --black-soft:   #1a1a1a;
+      --silver-dark:  #7a7a7a;
+      --silver:       #a8a8a8;
+      --silver-light: #d0d0d0;
+      --silver-pale:  #e8e8e8;
+      --gold:         #c9a84c;
+      --gold-light:   #e2c47a;
+      --gold-pale:    #f0dba0;
+      --white:        #f5f5f0;
+      --danger:       #c0392b;
+      --danger-light: #e74c3c;
+      --success:      #2ecc71;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--silver-light);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-back {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--silver); text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-back:hover { color: var(--gold-light); }
+    .nav-back svg { width: 14px; height: 14px; }
+
+    /* ── PAGE LAYOUT ── */
+    .page-wrap {
+      min-height: 100vh;
+      padding-top: 80px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: sticky; top: 80px; height: calc(100vh - 80px);
+      background: var(--black-mid);
+      border-right: 1px solid rgba(201,168,76,0.1);
+      padding: 3rem 2rem;
+      display: flex; flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 300; color: var(--silver-dark);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+    }
+    .sidebar-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2.5rem;
+    }
+
+    /* Step list */
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 0.9rem 1rem; cursor: pointer;
+      border: 1px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .step-item.active {
+      background: rgba(201,168,76,0.06);
+      border-color: rgba(201,168,76,0.2);
+    }
+    .step-item.completed { cursor: pointer; }
+    .step-item.locked { cursor: not-allowed; opacity: 0.4; }
+    .step-num {
+      width: 26px; height: 26px; flex-shrink: 0;
+      border: 1px solid rgba(168,168,168,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+      color: var(--silver-dark);
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .step-item.active .step-num {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: var(--black);
+    }
+    .step-item.completed .step-num {
+      border-color: var(--gold);
+      background: transparent;
+      color: var(--gold);
+    }
+    .step-info { flex: 1; }
+    .step-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--silver);
+      transition: color 0.2s;
+    }
+    .step-item.active .step-label { color: var(--white); }
+    .step-item.completed .step-label { color: var(--gold-light); }
+    .step-sublabel {
+      font-size: 0.72rem; color: var(--silver-dark); margin-top: 0.15rem;
+    }
+    .step-check {
+      width: 14px; height: 14px; color: var(--gold);
+      opacity: 0; transition: opacity 0.2s;
+      flex-shrink: 0; margin-top: 6px;
+    }
+    .step-item.completed .step-check { opacity: 1; }
+
+    /* Progress bar */
+    .sidebar-progress {
+      margin-top: auto; padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.72rem; color: var(--silver-dark);
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .progress-track {
+      height: 2px; background: rgba(255,255,255,0.06);
+      position: relative; overflow: hidden;
+    }
+    .progress-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: var(--gold);
+      transition: width 0.5s ease;
+    }
+    .autosave-status {
+      font-size: 0.7rem; color: var(--silver-dark);
+      margin-top: 0.8rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .autosave-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--silver-dark); flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .autosave-dot.saved { background: var(--success); }
+    .autosave-dot.saving { background: var(--gold); animation: pulse 1s infinite; }
+    .autosave-dot.error { background: var(--danger-light); }
+
+    /* ── MAIN CONTENT ── */
+    .form-main {
+      padding: 4rem 5rem;
+      max-width: 900px;
+    }
+
+    /* Stage header */
+    .stage-header { margin-bottom: 3rem; }
+    .stage-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    .stage-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+    .stage-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 300; color: var(--white); line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+    .stage-desc {
+      font-size: 0.95rem; line-height: 1.75; color: var(--silver-dark);
+      max-width: 560px;
+    }
+
+    .gold-divider { width: 48px; height: 2px; background: var(--gold); margin: 1.5rem 0 2.5rem; }
+
+    /* ── FIELDS ── */
+    .field-group { margin-bottom: 2rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; }
+
+    label {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--silver); margin-bottom: 0.55rem;
+    }
+    label .required { color: var(--gold); margin-left: 2px; }
+    label .optional {
+      font-weight: 400; color: var(--silver-dark);
+      font-size: 0.65rem; margin-left: 4px; letter-spacing: 0.1em;
+    }
+
+    .field-wrap { position: relative; }
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(168,168,168,0.2);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem; font-weight: 300;
+      padding: 0.9rem 1rem;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none; appearance: none;
+      -webkit-appearance: none;
+    }
+    input[type="date"] { color-scheme: dark; }
+    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+    textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(201,168,76,0.5);
+      background: rgba(201,168,76,0.04);
+    }
+    input.valid { border-color: rgba(46,204,113,0.4); }
+    input.invalid, select.invalid, textarea.invalid {
+      border-color: rgba(192,57,43,0.5);
+    }
+
+    /* Field icons */
+    .field-icon {
+      position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .field-icon svg { width: 16px; height: 16px; }
+    .field-icon.valid svg { stroke: var(--success); }
+    .field-icon.invalid svg { stroke: var(--danger-light); }
+
+    /* Error message */
+    .field-error {
+      font-size: 0.72rem; color: var(--danger-light);
+      margin-top: 0.35rem; display: none;
+      font-family: 'Barlow', sans-serif;
+    }
+    .field-error.show { display: block; }
+
+    /* Tooltip */
+    .field-label-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.55rem; }
+    .field-label-row label { margin-bottom: 0; }
+    .tooltip-btn {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 1px solid rgba(168,168,168,0.3);
+      background: transparent; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: var(--silver-dark);
+      font-family: 'Barlow', sans-serif; font-weight: 500;
+      position: relative; flex-shrink: 0;
+    }
+    .tooltip-popup {
+      position: absolute; bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--black-soft);
+      border: 1px solid rgba(201,168,76,0.2);
+      padding: 0.7rem 1rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.78rem; font-weight: 300;
+      color: var(--silver); line-height: 1.5;
+      width: 220px; z-index: 50;
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .tooltip-btn:hover .tooltip-popup,
+    .tooltip-btn:focus .tooltip-popup { opacity: 1; }
+    .tooltip-popup::after {
+      content: ''; position: absolute;
+      top: 100%; left: 50%; transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: rgba(201,168,76,0.2);
+    }
+
+    /* Char counter */
+    .char-counter {
+      text-align: right; font-size: 0.7rem;
+      color: var(--silver-dark); margin-top: 0.3rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.05em;
+    }
+    .char-counter.over { color: var(--danger-light); }
+
+    /* ── TEAM CARD BUILDER ── */
+    .card-builder { display: flex; flex-direction: column; gap: 1.2rem; }
+    .member-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 1.6rem;
+      position: relative;
+    }
+    .member-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.2rem;
+    }
+    .member-card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .remove-btn {
+      background: transparent; border: 1px solid rgba(192,57,43,0.3);
+      color: var(--danger-light); padding: 0.3rem 0.7rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .remove-btn:hover { background: rgba(192,57,43,0.15); }
+
+    .add-card-btn {
+      display: flex; align-items: center; gap: 0.7rem;
+      background: transparent;
+      border: 1px dashed rgba(201,168,76,0.25);
+      color: var(--gold); padding: 0.9rem 1.2rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; width: 100%;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .add-card-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+    .add-card-btn svg { width: 16px; height: 16px; stroke: var(--gold); flex-shrink: 0; }
+
+    /* ── RADIO / TOGGLE GROUPS ── */
+    .radio-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .radio-option { display: none; }
+    .radio-label {
+      display: inline-flex; align-items: center;
+      padding: 0.55rem 1.1rem;
+      border: 1px solid rgba(168,168,168,0.2);
+      color: var(--silver); cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .radio-option:checked + .radio-label {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.1);
+      color: var(--gold-light);
+    }
+
+    /* ── MONEY INPUT ── */
+    .money-wrap { position: relative; }
+    .money-prefix {
+      position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+      color: var(--gold); font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; pointer-events: none;
+    }
+    .money-wrap input { padding-left: 1.8rem; }
+
+    /* ── DOCUMENT UPLOAD ── */
+    .upload-zone {
+      border: 1px dashed rgba(201,168,76,0.25);
+      padding: 2.5rem 2rem;
+      text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--gold); background: rgba(201,168,76,0.04);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; border: none; padding: 0;
+    }
+    .upload-icon svg { width: 32px; height: 32px; stroke: var(--gold); margin-bottom: 0.8rem; opacity: 0.6; }
+    .upload-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--silver-dark);
+    }
+    .upload-sub { font-size: 0.72rem; color: var(--silver-dark); margin-top: 0.3rem; }
+
+    .file-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .file-item {
+      display: flex; align-items: center; gap: 0.8rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 0.7rem 1rem;
+    }
+    .file-icon svg { width: 18px; height: 18px; stroke: var(--gold); }
+    .file-name { flex: 1; font-size: 0.85rem; color: var(--silver); }
+    .file-size { font-size: 0.72rem; color: var(--silver-dark); }
+    .file-remove {
+      background: none; border: none; color: var(--silver-dark); cursor: pointer;
+      transition: color 0.2s; padding: 0.2rem;
+    }
+    .file-remove:hover { color: var(--danger-light); }
+    .file-remove svg { width: 14px; height: 14px; }
+    .file-progress { height: 2px; background: rgba(255,255,255,0.05); margin-top: 0.4rem; }
+    .file-progress-fill { height: 100%; background: var(--gold); transition: width 0.3s; }
+
+    /* ── OPTIONAL CONFIDENTIALITY BADGE ── */
+    .confidential-badge {
+      display: flex; align-items: center; gap: 0.8rem;
+      background: rgba(201,168,76,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 0.8rem 1.2rem; margin-bottom: 2rem;
+    }
+    .confidential-badge svg { width: 16px; height: 16px; stroke: var(--gold); flex-shrink: 0; }
+    .confidential-badge span {
+      font-size: 0.78rem; color: var(--silver-dark); line-height: 1.5;
+    }
+
+    /* ── CONDITIONAL SECTION ── */
+    .conditional-section { transition: opacity 0.3s, max-height 0.4s; overflow: hidden; }
+    .conditional-section.hidden { opacity: 0; max-height: 0; pointer-events: none; }
+    .conditional-section.visible { opacity: 1; max-height: 2000px; }
+
+    /* ── NAVIGATION BUTTONS ── */
+    .form-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 3.5rem; padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent; border: 1px solid rgba(168,168,168,0.25);
+      color: var(--silver); padding: 0.8rem 1.8rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-back:hover { border-color: var(--silver-light); color: var(--white); }
+    .btn-back svg { width: 14px; height: 14px; }
+    .btn-next {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--gold); color: var(--black);
+      border: none; padding: 0.9rem 2.4rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-next:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-next svg { width: 14px; height: 14px; }
+
+    /* ── REVIEW SCREEN ── */
+    .review-section { margin-bottom: 2.5rem; }
+    .review-section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 1.2rem;
+    }
+    .review-section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .review-edit-btn {
+      background: transparent; border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold); padding: 0.3rem 0.8rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .review-edit-btn:hover { background: rgba(201,168,76,0.08); }
+    .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .review-item {}
+    .review-key {
+      font-size: 0.72rem; color: var(--silver-dark);
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 0.2rem;
+    }
+    .review-val { font-size: 0.92rem; color: var(--silver-light); line-height: 1.5; }
+    .review-val.empty { color: var(--silver-dark); font-style: italic; }
+
+    /* ── SUCCESS SCREEN ── */
+    .success-screen {
+      display: none; flex-direction: column; align-items: center;
+      text-align: center; padding: 5rem 2rem;
+    }
+    .success-screen.show { display: flex; }
+    .success-icon {
+      width: 72px; height: 72px;
+      border: 1px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .success-icon svg { width: 36px; height: 36px; stroke: var(--gold); }
+    .success-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300; color: var(--white);
+      margin-bottom: 1rem;
+    }
+    .success-sub {
+      font-size: 1rem; color: var(--silver-dark); max-width: 480px;
+      line-height: 1.75; margin-bottom: 2.5rem;
+    }
+    .success-ref {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--silver-dark); margin-bottom: 0.4rem;
+    }
+    .success-id {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; color: var(--gold-light);
+    }
+
+    /* ── STAGE COMPLETION ANIMATION ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+    @keyframes completionPop {
+      0%   { transform: scale(0.7); opacity: 0; }
+      60%  { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .stage-panel { animation: fadeUp 0.4s both; }
+    .complete-flash {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(201,168,76,0.04);
+      pointer-events: none;
+      animation: fadeFlash 0.6s forwards;
+    }
+    @keyframes fadeFlash { 0%{opacity:1} 100%{opacity:0} }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 9000;
+      background: var(--black-soft); border: 1px solid rgba(201,168,76,0.2);
+      padding: 1rem 1.5rem; min-width: 260px;
+      font-size: 0.85rem; color: var(--silver-light);
+      display: none; align-items: center; gap: 0.8rem;
+      animation: fadeUp 0.3s both;
+    }
+    #toast.show { display: flex; }
+    #toast.success { border-color: rgba(46,204,113,0.3); }
+    #toast.error   { border-color: rgba(192,57,43,0.4); }
+    #toast svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1000px) {
+      .page-wrap { grid-template-columns: 240px 1fr; }
+      .form-main { padding: 3rem 2.5rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .page-wrap { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid rgba(201,168,76,0.1); padding: 1.5rem; }
+      .step-list { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+      .step-item { padding: 0.5rem 0.6rem; }
+      .step-info { display: none; }
+      .form-main { padding: 2rem 1.5rem; }
+      .field-row, .field-row-3 { grid-template-columns: 1fr; }
+      .review-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Midsouth <span>Venture</span> Labs</a>
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Site
+  </a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">Startup Application</div>
+    <div class="sidebar-title">Cohort 2025</div>
+
+    <ul class="step-list" id="stepList">
+      <li class="step-item active" data-step="0">
+        <div class="step-num">01</div>
+        <div class="step-info">
+          <div class="step-label">Company</div>
+          <div class="step-sublabel">Basic info & stage</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+      <li class="step-item locked" data-step="1">
+        <div class="step-num">02</div>
+        <div class="step-info">
+          <div class="step-label">Team</div>
+          <div class="step-sublabel">Founders & advisors</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+      <li class="step-item locked" data-step="2">
+        <div class="step-num">03</div>
+        <div class="step-info">
+          <div class="step-label">Problem & Solution</div>
+          <div class="step-sublabel">Your market & edge</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+      <li class="step-item locked" data-step="3">
+        <div class="step-num">04</div>
+        <div class="step-info">
+          <div class="step-label">Traction</div>
+          <div class="step-sublabel">Customers & milestones</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+      <li class="step-item locked" data-step="4">
+        <div class="step-num">05</div>
+        <div class="step-info">
+          <div class="step-label">Financials</div>
+          <div class="step-sublabel">Funding & burn rate</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+      <li class="step-item locked" data-step="5">
+        <div class="step-num">06</div>
+        <div class="step-info">
+          <div class="step-label">Program Fit</div>
+          <div class="step-sublabel">Goals & availability</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+      <li class="step-item locked" data-step="6">
+        <div class="step-num">07</div>
+        <div class="step-info">
+          <div class="step-label">Documents</div>
+          <div class="step-sublabel">Pitch deck & files</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+      <li class="step-item locked" data-step="7">
+        <div class="step-num">08</div>
+        <div class="step-info">
+          <div class="step-label">Review</div>
+          <div class="step-sublabel">Confirm & submit</div>
+        </div>
+        <svg class="step-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </li>
+    </ul>
+
+    <div class="sidebar-progress">
+      <div class="progress-label">
+        <span>Progress</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="autosave-status">
+        <div class="autosave-dot" id="autosaveDot"></div>
+        <span id="autosaveText">Changes auto-saved</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN FORM -->
+  <main class="form-main" id="formMain">
+
+    <!-- ════ STAGE 0: COMPANY ════ -->
+    <div class="stage-panel" id="stage-0">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 1 of 8</div>
+        <h1 class="stage-title">Company Basics</h1>
+        <p class="stage-desc">Tell us about your company — who you are, what you're building, and where you are in the journey.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div>
+            <label>Company Name <span class="required">*</span></label>
+            <div class="field-wrap">
+              <input type="text" id="company_name" placeholder="Acme Inc." data-required="true" />
+            </div>
+            <div class="field-error" id="err-company_name">Company name is required.</div>
+          </div>
+          <div>
+            <label>Website <span class="optional">(optional)</span></label>
+            <div class="field-wrap">
+              <input type="url" id="website" placeholder="https://yoursite.com" data-validate="url" />
+            </div>
+            <div class="field-error" id="err-website">Please enter a valid URL.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div>
+            <label>Incorporation Status <span class="required">*</span></label>
+            <select id="incorporation_status" data-required="true">
+              <option value="">Select status</option>
+              <option>Not yet incorporated</option>
+              <option>LLC</option>
+              <option>C-Corp</option>
+              <option>S-Corp</option>
+              <option>Sole Proprietorship</option>
+              <option>Nonprofit / 501(c)(3)</option>
+              <option>Other</option>
+            </select>
+            <div class="field-error" id="err-incorporation_status">Please select an option.</div>
+          </div>
+          <div>
+            <label>State of Incorporation <span class="optional">(if applicable)</span></label>
+            <select id="state_of_incorporation">
+              <option value="">Select state</option>
+              <option>Tennessee</option><option>Delaware</option><option>Alabama</option>
+              <option>Arkansas</option><option>Georgia</option><option>Kentucky</option>
+              <option>Louisiana</option><option>Mississippi</option><option>Missouri</option>
+              <option>Texas</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div>
+            <label>Founded Date <span class="optional">(optional)</span></label>
+            <input type="date" id="founded_date" />
+          </div>
+          <div>
+            <label>Industry / Sector <span class="required">*</span></label>
+            <select id="industry" data-required="true">
+              <option value="">Select industry</option>
+              <option>AgTech</option><option>B2B SaaS</option><option>Consumer Tech</option>
+              <option>Education</option><option>Fintech</option><option>Healthcare / HealthTech</option>
+              <option>Logistics / Supply Chain</option><option>Media & Entertainment</option>
+              <option>Real Estate / PropTech</option><option>Retail / E-Commerce</option>
+              <option>Social Impact</option><option>Other</option>
+            </select>
+            <div class="field-error" id="err-industry">Please select an industry.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Business Model <span class="required">*</span></label>
+        <div class="radio-group" id="business_model_group">
+          <input class="radio-option" type="radio" name="biz_model" id="bm_b2b" value="B2B"><label class="radio-label" for="bm_b2b">B2B</label>
+          <input class="radio-option" type="radio" name="biz_model" id="bm_b2c" value="B2C"><label class="radio-label" for="bm_b2c">B2C</label>
+          <input class="radio-option" type="radio" name="biz_model" id="bm_b2b2c" value="B2B2C"><label class="radio-label" for="bm_b2b2c">B2B2C</label>
+          <input class="radio-option" type="radio" name="biz_model" id="bm_mktplace" value="Marketplace"><label class="radio-label" for="bm_mktplace">Marketplace</label>
+          <input class="radio-option" type="radio" name="biz_model" id="bm_other" value="Other"><label class="radio-label" for="bm_other">Other</label>
+        </div>
+        <div class="field-error" id="err-business_model">Please select a business model.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Startup Stage <span class="required">*</span></label>
+        <div class="radio-group">
+          <input class="radio-option" type="radio" name="startup_stage" id="ss_idea" value="idea"><label class="radio-label" for="ss_idea">Idea Stage</label>
+          <input class="radio-option" type="radio" name="startup_stage" id="ss_pre" value="pre-revenue"><label class="radio-label" for="ss_pre">Pre-Revenue</label>
+          <input class="radio-option" type="radio" name="startup_stage" id="ss_rev" value="revenue-generating"><label class="radio-label" for="ss_rev">Revenue-Generating</label>
+          <input class="radio-option" type="radio" name="startup_stage" id="ss_scale" value="scaling"><label class="radio-label" for="ss_scale">Scaling</label>
+        </div>
+        <div class="field-error" id="err-startup_stage">Please select your stage.</div>
+      </div>
+
+      <div class="field-group">
+        <label>One-Line Pitch <span class="required">*</span></label>
+        <div class="field-wrap">
+          <input type="text" id="one_line_pitch" placeholder="We help X do Y by Z." maxlength="120" data-required="true" data-maxlen="120" />
+        </div>
+        <div class="char-counter" id="cc-one_line_pitch">0 / 120</div>
+        <div class="field-error" id="err-one_line_pitch">Please write your one-line pitch.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Elevator Pitch <span class="required">*</span> <span class="optional">(250 words max)</span></label>
+        <textarea id="elevator_pitch" rows="5" placeholder="Describe your company, the problem you solve, and why now..." data-required="true" data-maxwords="250"></textarea>
+        <div class="char-counter" id="cc-elevator_pitch">0 / 250 words</div>
+        <div class="field-error" id="err-elevator_pitch">Please write your elevator pitch.</div>
+      </div>
+
+      <div class="form-nav">
+        <div></div>
+        <button class="btn-next" onclick="nextStage(0)">
+          Next: Team
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ STAGE 1: TEAM ════ -->
+    <div class="stage-panel" id="stage-1" style="display:none">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 2 of 8</div>
+        <h1 class="stage-title">The Team</h1>
+        <p class="stage-desc">Investors bet on people first. Tell us who is building this company and what makes your team the right one.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="field-group">
+        <label style="margin-bottom:1rem">Founders <span class="required">*</span></label>
+        <div class="card-builder" id="founderCards"></div>
+        <button class="add-card-btn" onclick="addMember('founder')" style="margin-top:0.8rem">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Add Another Founder
+        </button>
+        <div class="field-error" id="err-founders">At least one founder is required.</div>
+      </div>
+
+      <div class="field-group" style="margin-top:2.5rem">
+        <label style="margin-bottom:1rem">Advisors <span class="optional">(optional)</span></label>
+        <div class="card-builder" id="advisorCards"></div>
+        <button class="add-card-btn" onclick="addMember('advisor')" style="margin-top:0.8rem">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Add an Advisor
+        </button>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStage(1)">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn-next" onclick="nextStage(1)">
+          Next: Problem & Solution
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ STAGE 2: PROBLEM & SOLUTION ════ -->
+    <div class="stage-panel" id="stage-2" style="display:none">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 3 of 8</div>
+        <h1 class="stage-title">Problem & Solution</h1>
+        <p class="stage-desc">Help us understand the market pain you've identified and how your solution uniquely addresses it.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="field-group">
+        <label>Problem Description <span class="required">*</span></label>
+        <textarea id="problem_description" rows="4" placeholder="What specific problem are you solving? Who experiences this pain?" data-required="true"></textarea>
+        <div class="field-error" id="err-problem_description">Please describe the problem.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Target Customer <span class="required">*</span></label>
+        <input type="text" id="target_customer" placeholder="e.g. Mid-size logistics companies in the Southeast" data-required="true" />
+        <div class="field-error" id="err-target_customer">Please identify your target customer.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Your Solution <span class="required">*</span></label>
+        <textarea id="solution_description" rows="4" placeholder="How does your product or service solve the problem?" data-required="true"></textarea>
+        <div class="field-error" id="err-solution_description">Please describe your solution.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Competitors / Current Alternatives <span class="required">*</span></label>
+        <textarea id="competitors" rows="3" placeholder="Who else is in this space, and what do customers use today?" data-required="true"></textarea>
+        <div class="field-error" id="err-competitors">Please describe your competitive landscape.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Your Differentiator <span class="required">*</span></label>
+        <textarea id="differentiator" rows="3" placeholder="What makes your approach better, faster, or unique?" data-required="true"></textarea>
+        <div class="field-error" id="err-differentiator">Please describe your differentiator.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Unfair Advantage <span class="optional">(optional)</span></label>
+        <textarea id="unfair_advantage" rows="3" placeholder="Proprietary tech, exclusive relationships, domain expertise, unique data..."></textarea>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStage(2)">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn-next" onclick="nextStage(2)">
+          Next: Traction
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ STAGE 3: TRACTION ════ -->
+    <div class="stage-panel" id="stage-3" style="display:none">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 4 of 8</div>
+        <h1 class="stage-title">Traction & Validation</h1>
+        <p class="stage-desc">Show us what you've already proven. Early traction — even small signals — matters to us.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="field-group">
+        <label>Do you have paying customers? <span class="required">*</span></label>
+        <div class="radio-group">
+          <input class="radio-option" type="radio" name="has_paying" id="hp_yes" value="yes" onchange="togglePayingFields(true)"><label class="radio-label" for="hp_yes">Yes</label>
+          <input class="radio-option" type="radio" name="has_paying" id="hp_no" value="no" onchange="togglePayingFields(false)"><label class="radio-label" for="hp_no">Not yet</label>
+        </div>
+        <div class="field-error" id="err-has_paying">Please select an option.</div>
+      </div>
+
+      <div class="conditional-section hidden" id="paying-fields">
+        <div class="field-group">
+          <div class="field-row">
+            <div>
+              <label>Number of Paying Customers</label>
+              <input type="number" id="customer_count" placeholder="0" min="0" />
+            </div>
+            <div>
+              <label>Monthly Recurring Revenue (MRR)</label>
+              <div class="money-wrap">
+                <span class="money-prefix">$</span>
+                <input type="number" id="mrr" placeholder="0" min="0" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Total Users / Sign-ups <span class="optional">(optional)</span></label>
+        <input type="number" id="user_count" placeholder="0" min="0" />
+      </div>
+
+      <div class="field-group">
+        <label>Key Milestones Achieved <span class="required">*</span></label>
+        <textarea id="milestones_achieved" rows="4" placeholder="What have you built or validated so far? Product launch, beta users, partnerships..." data-required="true"></textarea>
+        <div class="field-error" id="err-milestones_achieved">Please describe your milestones.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Pilots, LOIs, or Notable Partnerships <span class="optional">(optional)</span></label>
+        <textarea id="pilots_or_lois" rows="3" placeholder="Any letters of intent, pilot agreements, or corporate partnerships?"></textarea>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStage(3)">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn-next" onclick="nextStage(3)">
+          Next: Financials
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ STAGE 4: FINANCIALS ════ -->
+    <div class="stage-panel" id="stage-4" style="display:none">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 5 of 8</div>
+        <h1 class="stage-title">Financials & Funding</h1>
+        <p class="stage-desc">Help us understand your financial position and what you're looking for.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="confidential-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span>Your financial information is shared only with the Midsouth Venture Labs review team and is treated as strictly confidential.</span>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div>
+            <div class="field-label-row">
+              <label>Total Raised to Date</label>
+              <button class="tooltip-btn" tabindex="0">i
+                <div class="tooltip-popup">Include all funding sources: friends & family, angels, grants, loans, or prior institutional rounds.</div>
+              </button>
+            </div>
+            <div class="money-wrap">
+              <span class="money-prefix">$</span>
+              <input type="number" id="total_raised" placeholder="0" min="0" />
+            </div>
+          </div>
+          <div>
+            <label>Prior Investors <span class="optional">(optional)</span></label>
+            <input type="text" id="prior_investors" placeholder="Names of investors, funds, or angels" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div>
+            <div class="field-label-row">
+              <label>Monthly Burn Rate</label>
+              <button class="tooltip-btn" tabindex="0">i
+                <div class="tooltip-popup">Total monthly operating expenses. Enter 0 if you have no expenses yet.</div>
+              </button>
+            </div>
+            <div class="money-wrap">
+              <span class="money-prefix">$</span>
+              <input type="number" id="monthly_burn" placeholder="0" min="0" />
+            </div>
+          </div>
+          <div>
+            <div class="field-label-row">
+              <label>Runway Remaining (months)</label>
+              <button class="tooltip-btn" tabindex="0">i
+                <div class="tooltip-popup">How many months of operating cash do you have at your current burn rate?</div>
+              </button>
+            </div>
+            <input type="number" id="runway_months" placeholder="e.g. 12" min="0" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div>
+            <div class="field-label-row">
+              <label>Funding Sought <span class="required">*</span></label>
+              <button class="tooltip-btn" tabindex="0">i
+                <div class="tooltip-popup">How much are you looking to raise in your next round?</div>
+              </button>
+            </div>
+            <div class="money-wrap">
+              <span class="money-prefix">$</span>
+              <input type="number" id="funding_sought" placeholder="0" min="0" data-required="true" />
+            </div>
+            <div class="field-error" id="err-funding_sought">Please enter the amount you're seeking.</div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Use of Funds <span class="required">*</span></label>
+        <textarea id="use_of_funds" rows="4" placeholder="How will you deploy this capital? (e.g. 40% engineering, 30% sales, 20% marketing, 10% ops)" data-required="true"></textarea>
+        <div class="field-error" id="err-use_of_funds">Please describe your use of funds.</div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStage(4)">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn-next" onclick="nextStage(4)">
+          Next: Program Fit
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ STAGE 5: PROGRAM FIT ════ -->
+    <div class="stage-panel" id="stage-5" style="display:none">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 6 of 8</div>
+        <h1 class="stage-title">Program Fit</h1>
+        <p class="stage-desc">Help us understand what you're looking for from Midsouth Venture Labs and how we can best support you.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="field-group">
+        <label>Primary Goals for the Program <span class="required">*</span></label>
+        <textarea id="primary_goals" rows="4" placeholder="What do you most hope to get from Midsouth Venture Labs? (funding access, mentorship, customers, team-building, pitch prep...)" data-required="true"></textarea>
+        <div class="field-error" id="err-primary_goals">Please describe your goals.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Biggest Current Obstacle <span class="required">*</span></label>
+        <textarea id="biggest_obstacle" rows="4" placeholder="What is the single biggest challenge standing between you and your next milestone?" data-required="true"></textarea>
+        <div class="field-error" id="err-biggest_obstacle">Please describe your biggest obstacle.</div>
+      </div>
+
+      <div class="field-group">
+        <label>What Success Looks Like <span class="required">*</span></label>
+        <textarea id="success_definition" rows="4" placeholder="If you complete the program and it was everything you hoped for, what has changed for your company?" data-required="true"></textarea>
+        <div class="field-error" id="err-success_definition">Please define what success looks like.</div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div>
+            <label>Preferred Communication Style</label>
+            <select id="comm_preference">
+              <option value="">Select preference</option>
+              <option>Weekly check-ins</option>
+              <option>Bi-weekly check-ins</option>
+              <option>Async (Slack / email)</option>
+              <option>In-person preferred</option>
+              <option>Flexible</option>
+            </select>
+          </div>
+          <div>
+            <label>Availability for Cohort</label>
+            <select id="availability">
+              <option value="">Select availability</option>
+              <option>Full-time (40+ hrs/week)</option>
+              <option>Part-time (20–39 hrs/week)</option>
+              <option>Limited (under 20 hrs/week)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStage(5)">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn-next" onclick="nextStage(5)">
+          Next: Documents
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ STAGE 6: DOCUMENTS ════ -->
+    <div class="stage-panel" id="stage-6" style="display:none">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 7 of 8</div>
+        <h1 class="stage-title">Supporting Documents</h1>
+        <p class="stage-desc">Upload your pitch deck and any supporting materials. Only the pitch deck is required — everything else helps but isn't mandatory.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div class="field-group" id="uploadGroup-pitch_deck">
+        <label>Pitch Deck <span class="required">*</span></label>
+        <div class="upload-zone" id="zone-pitch_deck">
+          <input type="file" id="file-pitch_deck" accept=".pdf,.pptx,.key" onchange="handleFile('pitch_deck', this)" />
+          <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <div class="upload-text">Drag & drop or click to upload</div>
+          <div class="upload-sub">PDF, PPTX, or KEY — max 10MB</div>
+        </div>
+        <div class="file-list" id="files-pitch_deck"></div>
+        <div class="field-error" id="err-pitch_deck">A pitch deck is required.</div>
+      </div>
+
+      <div class="field-group" id="uploadGroup-financial_model">
+        <label>Financial Model <span class="optional">(optional)</span></label>
+        <div class="upload-zone" id="zone-financial_model">
+          <input type="file" id="file-financial_model" accept=".pdf,.xlsx,.csv" onchange="handleFile('financial_model', this)" />
+          <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="upload-text">Drag & drop or click to upload</div>
+          <div class="upload-sub">PDF, XLSX, or CSV — max 10MB</div>
+        </div>
+        <div class="file-list" id="files-financial_model"></div>
+      </div>
+
+      <div class="field-group" id="uploadGroup-cap_table">
+        <label>Cap Table Summary <span class="optional">(optional)</span></label>
+        <div class="upload-zone" id="zone-cap_table">
+          <input type="file" id="file-cap_table" accept=".pdf,.xlsx,.csv" onchange="handleFile('cap_table', this)" />
+          <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+          <div class="upload-text">Drag & drop or click to upload</div>
+          <div class="upload-sub">PDF, XLSX, or CSV — max 10MB</div>
+        </div>
+        <div class="file-list" id="files-cap_table"></div>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="prevStage(6)">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn-next" onclick="nextStage(6)">
+          Next: Review & Submit
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ STAGE 7: REVIEW ════ -->
+    <div class="stage-panel" id="stage-7" style="display:none">
+      <div class="stage-header">
+        <div class="stage-eyebrow">Step 8 of 8</div>
+        <h1 class="stage-title">Review & Submit</h1>
+        <p class="stage-desc">Please review your application below. You can edit any section before submitting.</p>
+        <div class="gold-divider"></div>
+      </div>
+
+      <div id="reviewContent"></div>
+
+      <div class="form-nav" style="margin-top:2rem">
+        <button class="btn-back" onclick="prevStage(7)">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button class="btn-next" id="submitBtn" onclick="submitApplication()" style="background:var(--gold)">
+          Submit Application →
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ SUCCESS ════ -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 class="success-headline">Application Submitted</h2>
+      <p class="success-sub">Thank you for applying to Midsouth Venture Labs. Our team reviews applications on a rolling basis and will be in touch within 5–7 business days.</p>
+      <div class="success-ref">Application Reference</div>
+      <div class="success-id" id="successId">—</div>
+      <div style="margin-top:2.5rem">
+        <a href="index.html" class="btn-next" style="text-decoration:none; display:inline-flex; align-items:center; gap:0.6rem;">
+          Return to Home
+          <svg viewBox="0 0 14 14" fill="none" width="14" height="14"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div id="toast">
+  <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   SUPABASE INIT
+══════════════════════════════════════════ */
+const SUPABASE_URL     = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let currentStep  = 0;
+const TOTAL_STEPS = 8;
+let applicationId = null;
+let completedSteps = new Set();
+let autosaveTimer = null;
+let uploadedFiles = {};   // { docType: { name, size, path } }
+let founders = [];
+let advisors = [];
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+function showStage(n) {
+  document.querySelectorAll('.stage-panel').forEach(p => p.style.display = 'none');
+  const panel = document.getElementById('stage-' + n);
+  if (panel) { panel.style.display = 'block'; panel.style.animation = 'none'; void panel.offsetWidth; panel.style.animation = ''; }
+  document.getElementById('successScreen').classList.remove('show');
+
+  // Sidebar
+  document.querySelectorAll('.step-item').forEach((el, i) => {
+    el.classList.remove('active', 'locked');
+    if (i === n) { el.classList.add('active'); }
+    else if (completedSteps.has(i)) { /* completed, clickable */ }
+    else if (i > n && !completedSteps.has(i)) { el.classList.add('locked'); }
+  });
+
+  currentStep = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (n === 7) buildReview();
+}
+
+function nextStage(from) {
+  if (!validateStage(from)) return;
+  completedSteps.add(from);
+  updateSidebarStates();
+  autoSave();
+  flashCompletion();
+  showStage(from + 1);
+}
+
+function prevStage(from) {
+  showStage(from - 1);
+}
+
+function updateSidebarStates() {
+  document.querySelectorAll('.step-item').forEach((el, i) => {
+    el.classList.remove('active', 'locked', 'completed');
+    if (i === currentStep)       el.classList.add('active');
+    else if (completedSteps.has(i)) el.classList.add('completed');
+    else                             el.classList.add('locked');
+  });
+  // make completed steps clickable
+  document.querySelectorAll('.step-item.completed').forEach(el => {
+    el.onclick = () => showStage(parseInt(el.dataset.step));
+  });
+}
+
+function updateProgress() {
+  const done = completedSteps.size;
+  const pct  = Math.round((done / (TOTAL_STEPS - 1)) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent  = pct + '%';
+}
+
+function flashCompletion() {
+  const el = document.createElement('div');
+  el.className = 'complete-flash';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 700);
+}
+
+/* ══════════════════════════════════════════
+   VALIDATION
+══════════════════════════════════════════ */
+function validateStage(step) {
+  let valid = true;
+
+  if (step === 0) {
+    valid &= requireField('company_name');
+    valid &= requireSelect('incorporation_status');
+    valid &= requireSelect('industry');
+    valid &= requireRadio('biz_model', 'business_model');
+    valid &= requireRadio('startup_stage', 'startup_stage');
+    valid &= requireField('one_line_pitch');
+    valid &= requireField('elevator_pitch');
+  }
+  if (step === 1) {
+    if (founders.length === 0) {
+      document.getElementById('err-founders').classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('err-founders').classList.remove('show');
+    }
+  }
+  if (step === 2) {
+    ['problem_description','target_customer','solution_description','competitors','differentiator'].forEach(id => { valid &= requireField(id); });
+  }
+  if (step === 3) {
+    valid &= requireRadio('has_paying', 'has_paying');
+    valid &= requireField('milestones_achieved');
+  }
+  if (step === 4) {
+    valid &= requireField('funding_sought');
+    valid &= requireField('use_of_funds');
+  }
+  if (step === 5) {
+    ['primary_goals','biggest_obstacle','success_definition'].forEach(id => { valid &= requireField(id); });
+  }
+  if (step === 6) {
+    if (!uploadedFiles['pitch_deck']) {
+      document.getElementById('err-pitch_deck').classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('err-pitch_deck').classList.remove('show');
+    }
+  }
+
+  return !!valid;
+}
+
+function requireField(id) {
+  const el  = document.getElementById(id);
+  const err = document.getElementById('err-' + id);
+  if (!el) return true;
+  const val = el.value.trim();
+  if (!val) {
+    el.classList.add('invalid'); el.classList.remove('valid');
+    if (err) err.classList.add('show');
+    return false;
+  }
+  el.classList.remove('invalid'); el.classList.add('valid');
+  if (err) err.classList.remove('show');
+  return true;
+}
+
+function requireSelect(id) {
+  const el  = document.getElementById(id);
+  const err = document.getElementById('err-' + id);
+  if (!el || el.value) { if(err) err.classList.remove('show'); return true; }
+  el.classList.add('invalid');
+  if (err) err.classList.add('show');
+  return false;
+}
+
+function requireRadio(name, errKey) {
+  const checked = document.querySelector(`input[name="${name}"]:checked`);
+  const err = document.getElementById('err-' + errKey);
+  if (checked) { if(err) err.classList.remove('show'); return true; }
+  if(err) err.classList.add('show');
+  return false;
+}
+
+/* ══════════════════════════════════════════
+   INLINE VALIDATION ON BLUR
+══════════════════════════════════════════ */
+document.querySelectorAll('input[data-required], textarea[data-required], select[data-required]').forEach(el => {
+  el.addEventListener('blur', () => {
+    if (el.value.trim()) {
+      el.classList.add('valid'); el.classList.remove('invalid');
+      const err = document.getElementById('err-' + el.id);
+      if (err) err.classList.remove('show');
+    }
+    scheduleSave();
+  });
+  el.addEventListener('input', scheduleSave);
+});
+
+/* URL validate */
+document.getElementById('website').addEventListener('blur', function() {
+  const v = this.value.trim();
+  const err = document.getElementById('err-website');
+  if (!v) return;
+  try { new URL(v); this.classList.add('valid'); this.classList.remove('invalid'); err.classList.remove('show'); }
+  catch { this.classList.add('invalid'); err.classList.add('show'); }
+});
+
+/* ══════════════════════════════════════════
+   CHAR / WORD COUNTERS
+══════════════════════════════════════════ */
+function initCounter(fieldId, counterId, maxLen, isWords) {
+  const field = document.getElementById(fieldId);
+  const counter = document.getElementById(counterId);
+  if (!field || !counter) return;
+  field.addEventListener('input', () => {
+    const count = isWords ? field.value.trim().split(/\s+/).filter(Boolean).length : field.value.length;
+    counter.textContent = isWords ? `${count} / ${maxLen} words` : `${count} / ${maxLen}`;
+    counter.classList.toggle('over', count > maxLen);
+  });
+}
+initCounter('one_line_pitch', 'cc-one_line_pitch', 120, false);
+initCounter('elevator_pitch', 'cc-elevator_pitch', 250, true);
+
+/* ══════════════════════════════════════════
+   TEAM MEMBERS
+══════════════════════════════════════════ */
+function addMember(type) {
+  const arr = type === 'founder' ? founders : advisors;
+  const containerId = type === 'founder' ? 'founderCards' : 'advisorCards';
+  const idx = arr.length;
+  arr.push({ full_name:'', role:'', linkedin_url:'', commitment_type: type === 'founder' ? '' : undefined, background_summary:'', is_founder: type === 'founder' });
+
+  const container = document.getElementById(containerId);
+  const card = document.createElement('div');
+  card.className = 'member-card';
+  card.id = `${type}-card-${idx}`;
+
+  const commitField = type === 'founder' ? `
+    <div style="margin-top:1rem">
+      <label>Commitment</label>
+      <select onchange="updateMember('${type}',${idx},'commitment_type',this.value)">
+        <option value="">Select</option>
+        <option>Full-time</option>
+        <option>Part-time</option>
+        <option>Transitioning full-time</option>
+      </select>
+    </div>` : '';
+
+  card.innerHTML = `
+    <div class="member-card-header">
+      <div class="member-card-title">${type === 'founder' ? 'Founder' : 'Advisor'} ${idx + 1}</div>
+      ${idx > 0 || type === 'advisor' ? `<button class="remove-btn" onclick="removeMember('${type}',${idx})">Remove</button>` : ''}
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Full Name <span class="required">*</span></label>
+        <input type="text" placeholder="Jane Smith" onchange="updateMember('${type}',${idx},'full_name',this.value)" oninput="updateMember('${type}',${idx},'full_name',this.value)" />
+      </div>
+      <div>
+        <label>Role / Title <span class="required">*</span></label>
+        <input type="text" placeholder="CEO / Co-Founder" onchange="updateMember('${type}',${idx},'role',this.value)" oninput="updateMember('${type}',${idx},'role',this.value)" />
+      </div>
+    </div>
+    <div style="margin-top:1rem">
+      <label>LinkedIn URL</label>
+      <input type="url" placeholder="https://linkedin.com/in/..." onchange="updateMember('${type}',${idx},'linkedin_url',this.value)" />
+    </div>
+    <div style="margin-top:1rem">
+      <label>Background Summary</label>
+      <textarea rows="2" placeholder="Relevant experience, domain expertise, past companies..." onchange="updateMember('${type}',${idx},'background_summary',this.value)" oninput="updateMember('${type}',${idx},'background_summary',this.value)"></textarea>
+    </div>
+    ${commitField}`;
+
+  container.appendChild(card);
+  scheduleSave();
+}
+
+function removeMember(type, idx) {
+  const arr = type === 'founder' ? founders : advisors;
+  arr.splice(idx, 1);
+  rebuildCards(type);
+  scheduleSave();
+}
+
+function rebuildCards(type) {
+  const arr = type === 'founder' ? founders : advisors;
+  const container = document.getElementById(type === 'founder' ? 'founderCards' : 'advisorCards');
+  container.innerHTML = '';
+  const saved = [...arr];
+  if (type === 'founder') founders = [];
+  else advisors = [];
+  saved.forEach(() => addMember(type));
+}
+
+function updateMember(type, idx, field, val) {
+  const arr = type === 'founder' ? founders : advisors;
+  if (arr[idx]) arr[idx][field] = val;
+  scheduleSave();
+}
+
+/* ══════════════════════════════════════════
+   CONDITIONAL FIELDS
+══════════════════════════════════════════ */
+function togglePayingFields(show) {
+  const sec = document.getElementById('paying-fields');
+  sec.classList.toggle('hidden', !show);
+  sec.classList.toggle('visible', show);
+}
+
+/* ══════════════════════════════════════════
+   FILE UPLOAD
+══════════════════════════════════════════ */
+function handleFile(docType, input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  if (file.size > 10 * 1024 * 1024) {
+    showToast('File exceeds 10MB limit.', 'error'); return;
+  }
+
+  const listEl = document.getElementById('files-' + docType);
+  listEl.innerHTML = '';
+
+  const item = document.createElement('div');
+  item.className = 'file-item';
+  item.innerHTML = `
+    <div class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor"/><polyline points="14 2 14 8 20 8" stroke="currentColor"/></svg></div>
+    <div class="file-name">${file.name}</div>
+    <div class="file-size">${(file.size/1024/1024).toFixed(1)} MB</div>
+    <button class="file-remove" onclick="removeFile('${docType}')"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    <div class="file-progress" style="width:100%;position:absolute;bottom:0;left:0"><div class="file-progress-fill" id="prog-${docType}" style="width:0%"></div></div>`;
+  item.style.position = 'relative';
+  listEl.appendChild(item);
+
+  // Simulate upload progress
+  uploadedFiles[docType] = { name: file.name, size: file.size, file };
+  if (docType === 'pitch_deck') document.getElementById('err-pitch_deck').classList.remove('show');
+
+  let p = 0;
+  const progEl = document.getElementById('prog-' + docType);
+  const iv = setInterval(() => {
+    p += Math.random() * 20;
+    if (p >= 100) { p = 100; clearInterval(iv); progEl.style.opacity = '0'; }
+    progEl.style.width = p + '%';
+  }, 150);
+
+  showToast(`${file.name} ready to upload`, 'success');
+  scheduleSave();
+}
+
+function removeFile(docType) {
+  delete uploadedFiles[docType];
+  document.getElementById('files-' + docType).innerHTML = '';
+  document.getElementById('file-' + docType).value = '';
+}
+
+// Drag & drop
+document.querySelectorAll('.upload-zone').forEach(zone => {
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('dragover');
+    const dt = e.dataTransfer;
+    if (dt.files.length) {
+      const type = zone.id.replace('zone-','');
+      const input = document.getElementById('file-' + type);
+      const transfer = new DataTransfer();
+      transfer.items.add(dt.files[0]);
+      input.files = transfer.files;
+      handleFile(type, input);
+    }
+  });
+});
+
+/* ══════════════════════════════════════════
+   REVIEW BUILD
+══════════════════════════════════════════ */
+function buildReview() {
+  const rc = document.getElementById('reviewContent');
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : '—'; };
+  const radio = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : '—'; };
+
+  const sections = [
+    { title: 'Company', step: 0, fields: [
+      ['Company Name', g('company_name')], ['Website', g('website') || '—'],
+      ['Incorporation', g('incorporation_status')], ['State', g('state_of_incorporation') || '—'],
+      ['Founded', g('founded_date') || '—'], ['Industry', g('industry')],
+      ['Business Model', radio('biz_model')], ['Stage', radio('startup_stage')],
+      ['One-Line Pitch', g('one_line_pitch')], ['Elevator Pitch', g('elevator_pitch')]
+    ]},
+    { title: 'Problem & Solution', step: 2, fields: [
+      ['Problem', g('problem_description')], ['Target Customer', g('target_customer')],
+      ['Solution', g('solution_description')], ['Competitors', g('competitors')],
+      ['Differentiator', g('differentiator')], ['Unfair Advantage', g('unfair_advantage') || '—']
+    ]},
+    { title: 'Traction', step: 3, fields: [
+      ['Paying Customers?', radio('has_paying')], ['Customer Count', g('customer_count') || '—'],
+      ['MRR', g('mrr') ? '$' + Number(g('mrr')).toLocaleString() : '—'], ['User Count', g('user_count') || '—'],
+      ['Milestones', g('milestones_achieved')], ['Pilots / LOIs', g('pilots_or_lois') || '—']
+    ]},
+    { title: 'Financials', step: 4, fields: [
+      ['Total Raised', g('total_raised') ? '$' + Number(g('total_raised')).toLocaleString() : '—'],
+      ['Prior Investors', g('prior_investors') || '—'],
+      ['Monthly Burn', g('monthly_burn') ? '$' + Number(g('monthly_burn')).toLocaleString() : '—'],
+      ['Runway', g('runway_months') ? g('runway_months') + ' months' : '—'],
+      ['Funding Sought', g('funding_sought') ? '$' + Number(g('funding_sought')).toLocaleString() : '—'],
+      ['Use of Funds', g('use_of_funds')]
+    ]},
+    { title: 'Program Fit', step: 5, fields: [
+      ['Goals', g('primary_goals')], ['Biggest Obstacle', g('biggest_obstacle')],
+      ['Success Definition', g('success_definition')],
+      ['Comm. Preference', g('comm_preference') || '—'], ['Availability', g('availability') || '—']
+    ]},
+    { title: 'Documents', step: 6, fields: [
+      ['Pitch Deck', uploadedFiles['pitch_deck'] ? uploadedFiles['pitch_deck'].name : '— (required)'],
+      ['Financial Model', uploadedFiles['financial_model'] ? uploadedFiles['financial_model'].name : 'Not uploaded'],
+      ['Cap Table', uploadedFiles['cap_table'] ? uploadedFiles['cap_table'].name : 'Not uploaded']
+    ]}
+  ];
+
+  rc.innerHTML = sections.map(sec => `
+    <div class="review-section">
+      <div class="review-section-header">
+        <div class="review-section-title">${sec.title}</div>
+        <button class="review-edit-btn" onclick="showStage(${sec.step})">Edit</button>
+      </div>
+      <div class="review-grid">
+        ${sec.fields.map(([k, v]) => `
+          <div class="review-item">
+            <div class="review-key">${k}</div>
+            <div class="review-val ${!v || v === '—' ? 'empty' : ''}">${v || '—'}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  if (founders.length) {
+    rc.innerHTML += `
+      <div class="review-section">
+        <div class="review-section-header">
+          <div class="review-section-title">Team (${founders.length} Founder${founders.length>1?'s':''}${advisors.length?' · '+advisors.length+' Advisor'+( advisors.length>1?'s':''):''} )</div>
+          <button class="review-edit-btn" onclick="showStage(1)">Edit</button>
+        </div>
+        <div class="review-grid">
+          ${founders.map(f => `<div class="review-item"><div class="review-key">Founder</div><div class="review-val">${f.full_name || '—'} — ${f.role || '—'}</div></div>`).join('')}
+          ${advisors.map(a => `<div class="review-item"><div class="review-key">Advisor</div><div class="review-val">${a.full_name || '—'} — ${a.role || '—'}</div></div>`).join('')}
+        </div>
+      </div>`;
+  }
+}
+
+/* ══════════════════════════════════════════
+   AUTOSAVE
+══════════════════════════════════════════ */
+function scheduleSave() {
+  clearTimeout(autosaveTimer);
+  setAutosaveDot('saving');
+  autosaveTimer = setTimeout(autoSave, 1800);
+}
+
+function setAutosaveDot(state) {
+  const dot = document.getElementById('autosaveDot');
+  const txt = document.getElementById('autosaveText');
+  dot.className = 'autosave-dot ' + state;
+  if (state === 'saved')  txt.textContent = 'All changes saved';
+  if (state === 'saving') txt.textContent = 'Saving…';
+  if (state === 'error')  txt.textContent = 'Save failed — check connection';
+}
+
+async function autoSave() {
+  const payload = collectPayload();
+  try {
+    if (!applicationId) {
+      // Create new application record
+      const { data, error } = await db.from('applications').insert({
+        status: 'draft',
+        stage_number: currentStep
+      }).select('id').single();
+      if (error) throw error;
+      applicationId = data.id;
+      sessionStorage.setItem('mvl_app_id', applicationId);
+    } else {
+      await db.from('applications').update({ stage_number: currentStep, updated_at: new Date().toISOString() }).eq('id', applicationId);
+    }
+    // Upsert company_info
+    if (payload.company) {
+      await db.from('company_info').upsert({ ...payload.company, application_id: applicationId }, { onConflict: 'application_id' });
+    }
+    setAutosaveDot('saved');
+  } catch (e) {
+    console.error('Autosave error:', e);
+    setAutosaveDot('error');
+  }
+}
+
+function collectPayload() {
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() || null : null; };
+  const radio = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; };
+  return {
+    company: {
+      company_name: g('company_name'),
+      website: g('website'),
+      incorporation_status: g('incorporation_status'),
+      state_of_incorporation: g('state_of_incorporation'),
+      founded_date: g('founded_date'),
+      industry: g('industry'),
+      business_model: radio('biz_model'),
+      startup_stage: radio('startup_stage'),
+      one_line_pitch: g('one_line_pitch'),
+      elevator_pitch: g('elevator_pitch')
+    },
+    problem: {
+      problem_description: g('problem_description'),
+      target_customer: g('target_customer'),
+      solution_description: g('solution_description'),
+      competitors: g('competitors'),
+      differentiator: g('differentiator'),
+      unfair_advantage: g('unfair_advantage')
+    },
+    traction: {
+      has_paying_customers: document.querySelector('input[name="has_paying"]:checked')?.value === 'yes',
+      customer_count: parseInt(g('customer_count')) || 0,
+      user_count: parseInt(g('user_count')) || 0,
+      mrr: parseFloat(g('mrr')) || null,
+      milestones_achieved: g('milestones_achieved'),
+      pilots_or_lois: g('pilots_or_lois')
+    },
+    financials: {
+      total_raised: parseFloat(g('total_raised')) || null,
+      prior_investors: g('prior_investors'),
+      monthly_burn: parseFloat(g('monthly_burn')) || null,
+      runway_months: parseInt(g('runway_months')) || null,
+      funding_sought: parseFloat(g('funding_sought')) || null,
+      use_of_funds: g('use_of_funds')
+    },
+    program_fit: {
+      primary_goals: g('primary_goals'),
+      biggest_obstacle: g('biggest_obstacle'),
+      success_definition: g('success_definition'),
+      comm_preference: g('comm_preference'),
+      availability: g('availability')
+    }
+  };
+}
+
+/* ══════════════════════════════════════════
+   SUBMIT
+══════════════════════════════════════════ */
+async function submitApplication() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  const payload = collectPayload();
+
+  try {
+    // Ensure application record
+    if (!applicationId) {
+      const { data, error } = await db.from('applications').insert({ status: 'submitted', stage_number: 7 }).select('id').single();
+      if (error) throw error;
+      applicationId = data.id;
+    } else {
+      await db.from('applications').update({ status: 'submitted', stage_number: 7, updated_at: new Date().toISOString() }).eq('id', applicationId);
+    }
+
+    const aid = applicationId;
+
+    // Upsert all sections
+    await db.from('company_info').upsert({ ...payload.company, application_id: aid }, { onConflict: 'application_id' });
+    await db.from('problem_solution').upsert({ ...payload.problem, application_id: aid }, { onConflict: 'application_id' });
+    await db.from('traction').upsert({ ...payload.traction, application_id: aid }, { onConflict: 'application_id' });
+    await db.from('financials').upsert({ ...payload.financials, application_id: aid }, { onConflict: 'application_id' });
+    await db.from('program_fit').upsert({ ...payload.program_fit, application_id: aid }, { onConflict: 'application_id' });
+
+    // Insert team members
+    if (founders.length) {
+      await db.from('team_members').delete().eq('application_id', aid);
+      await db.from('team_members').insert(founders.map(f => ({ ...f, application_id: aid })));
+    }
+    if (advisors.length) {
+      await db.from('advisors').delete().eq('application_id', aid);
+      await db.from('advisors').insert(advisors.map(a => ({ ...a, application_id: aid })));
+    }
+
+    // Upload files to Supabase Storage
+    for (const [docType, meta] of Object.entries(uploadedFiles)) {
+      if (!meta.file) continue;
+      const path = `applications/${aid}/${docType}/${meta.name}`;
+      const { error: upErr } = await db.storage.from('application-docs').upload(path, meta.file, { upsert: true });
+      if (!upErr) {
+        await db.from('documents').insert({
+          application_id: aid,
+          document_type: docType,
+          storage_path: path,
+          original_filename: meta.name
+        });
+      }
+    }
+
+    // Show success
+    document.querySelectorAll('.stage-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('successScreen').classList.add('show');
+    document.getElementById('successId').textContent = aid.substring(0, 8).toUpperCase();
+    sessionStorage.removeItem('mvl_app_id');
+
+  } catch (err) {
+    console.error('Submit error:', err);
+    btn.disabled = false;
+    btn.textContent = 'Submit Application →';
+    showToast('Submission failed. Please try again.', 'error');
+  }
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg, type = 'success') {
+  const el  = document.getElementById('toast');
+  const ico = document.getElementById('toastIcon');
+  const txt = document.getElementById('toastMsg');
+  el.className = 'show ' + type;
+  txt.textContent = msg;
+  ico.innerHTML = type === 'success'
+    ? '<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>'
+    : '<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-linecap="round"/>';
+  ico.setAttribute('stroke', type === 'success' ? 'var(--success)' : 'var(--danger-light)');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className = '', 3500);
+}
+
+/* ══════════════════════════════════════════
+   EXIT INTENT GUARD
+══════════════════════════════════════════ */
+window.addEventListener('beforeunload', e => {
+  if (currentStep > 0 && currentStep < 7) {
+    e.preventDefault(); e.returnValue = '';
+  }
+});
+
+/* ══════════════════════════════════════════
+   RESUME FROM SESSION
+══════════════════════════════════════════ */
+const savedId = sessionStorage.getItem('mvl_app_id');
+if (savedId) applicationId = savedId;
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+addMember('founder');  // Start with one blank founder card
+showStage(0);
+</script>
+</body>
+</html>

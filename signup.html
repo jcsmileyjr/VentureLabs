@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pitch Day Signup — Midsouth Venture Labs</title>
+
+  <!-- ── FONTS (matching index.html) ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════════
+       BRAND TOKENS — identical to index.html
+    ══════════════════════════════════════════ */
+    :root {
+      --black:        #0a0a0a;
+      --black-mid:    #111111;
+      --black-soft:   #1a1a1a;
+      --silver-dark:  #7a7a7a;
+      --silver:       #a8a8a8;
+      --silver-light: #d0d0d0;
+      --silver-pale:  #e8e8e8;
+      --gold:         #c9a84c;
+      --gold-light:   #e2c47a;
+      --gold-pale:    #f0dba0;
+      --white:        #f5f5f0;
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ── BASE ── */
+    body {
+      background: var(--black);
+      color: var(--silver-light);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════════════════
+       NAV — copied from index.html + new link
+    ══════════════════════════════════════════ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 4rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.05rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--white); text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    /* Hamburger button (mobile only) */
+    .nav-toggle {
+      display: none;
+      background: none; border: none; cursor: pointer;
+      padding: 0.3rem; flex-direction: column; gap: 5px;
+    }
+    .nav-toggle span {
+      display: block; width: 22px; height: 2px;
+      background: var(--silver-light);
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    /* open state */
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--silver); text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--gold-light); }
+
+    .nav-cta {
+      background: transparent; border: 1px solid var(--gold);
+      color: var(--gold); padding: 0.55rem 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.25s, color 0.25s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+    /* ══════════════════════════════════════════
+       PAGE HERO / BANNER
+    ══════════════════════════════════════════ */
+    .page-banner {
+      padding: 8rem 4rem 4rem;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+    }
+    /* subtle grid + glow — matches index hero aesthetic */
+    .page-banner::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 80% at 30% 60%, rgba(201,168,76,0.05) 0%, transparent 65%),
+        var(--black);
+    }
+    .page-banner::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 90% 80% at 30% 60%, black 20%, transparent 75%);
+    }
+    .banner-line {
+      position: absolute; top: 0; left: 0; width: 1px; height: 100px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      z-index: 1;
+    }
+    .page-banner-inner {
+      position: relative; z-index: 2;
+      max-width: 700px;
+    }
+    .page-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold);
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+    .page-eyebrow::before {
+      content: ''; display: block; width: 32px; height: 1px; background: var(--gold);
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+      font-weight: 300; line-height: 1.1;
+      color: var(--white);
+    }
+    .page-title em { font-style: italic; color: var(--gold-light); }
+    .page-subtitle {
+      margin-top: 1.2rem;
+      font-size: 1rem; line-height: 1.75; color: var(--silver);
+      max-width: 560px;
+    }
+    /* Event meta chips */
+    .event-meta {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.8rem;
+    }
+    .meta-chip {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold-light);
+      padding: 0.4rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════════════════
+       FORM SECTION
+    ══════════════════════════════════════════ */
+    .form-section {
+      padding: 5rem 4rem 7rem;
+    }
+    .form-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 3.5rem;
+      position: relative;
+    }
+    /* gold top bar accent */
+    .form-wrapper::before {
+      content: '';
+      position: absolute; top: -1px; left: 2.5rem;
+      width: 80px; height: 2px;
+      background: var(--gold);
+    }
+    /* corner bracket — bottom right */
+    .form-wrapper::after {
+      content: '';
+      position: absolute; bottom: -6px; right: -6px;
+      width: 48px; height: 48px;
+      border-bottom: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+    }
+
+    /* Form heading */
+    .form-heading {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold);
+      display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 2.2rem;
+    }
+    .form-heading::before {
+      content: ''; width: 24px; height: 1px; background: var(--gold);
+    }
+
+    /* ── FIELD GROUPS ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+    }
+    .form-group {
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    /* span full width */
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--silver-dark);
+    }
+    /* required asterisk */
+    label .req { color: var(--gold); margin-left: 0.2rem; }
+
+    /* ── INPUTS, SELECTS, TEXTAREAS ── */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      padding: 0.95rem 1.1rem;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s;
+      /* large & touch-friendly */
+      min-height: 52px;
+      border-radius: 0;
+    }
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder,
+    input[type="tel"]::placeholder,
+    input[type="number"]::placeholder,
+    textarea::placeholder {
+      color: var(--silver-dark);
+      font-weight: 300;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(201,168,76,0.55);
+      background: rgba(201,168,76,0.04);
+    }
+    /* error state */
+    input.error,
+    select.error,
+    textarea.error {
+      border-color: rgba(220, 80, 80, 0.7);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+
+    /* select arrow */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute; right: 1.1rem; top: 50%; transform: translateY(-50%);
+      color: var(--gold); font-size: 0.9rem;
+      pointer-events: none;
+    }
+    select { cursor: pointer; padding-right: 2.5rem; }
+    select option { background: var(--black-soft); color: var(--silver-light); }
+
+    /* number input — hide spinners */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; }
+
+    /* ── INLINE FIELD ERROR MESSAGES ── */
+    .field-error {
+      font-size: 0.76rem;
+      color: #e06060;
+      letter-spacing: 0.04em;
+      min-height: 1rem;
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    /* ── DIVIDER ── */
+    .form-divider {
+      grid-column: 1 / -1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 0.4rem 0;
+    }
+    .form-section-label {
+      grid-column: 1 / -1;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 300;
+      color: var(--silver-light);
+      padding-top: 0.6rem;
+    }
+    .form-section-label span { color: var(--gold); margin-right: 0.5rem; }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-submit {
+      grid-column: 1 / -1;
+      margin-top: 1rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1.1rem 2.5rem;
+      min-height: 56px;
+      border: none; cursor: pointer;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+    .btn-submit:disabled {
+      opacity: 0.55; cursor: not-allowed; transform: none;
+    }
+
+    /* ── SUCCESS MESSAGE ── */
+    #success-msg {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    #success-msg.visible { display: block; }
+    .success-icon {
+      width: 64px; height: 64px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.6rem;
+    }
+    .success-icon svg { stroke: var(--gold); fill: none; stroke-width: 2; }
+    .success-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300;
+      color: var(--white); margin-bottom: 0.8rem;
+    }
+    .success-body {
+      font-size: 0.95rem; line-height: 1.75; color: var(--silver);
+      max-width: 440px; margin: 0 auto;
+    }
+    .success-body strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black); padding: 2.5rem 4rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 0.9rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--silver-dark);
+    }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: 0.78rem; color: var(--silver-dark); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.65s both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.22s; }
+    .delay-3 { animation-delay: 0.36s; }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links {
+        display: none;
+        position: fixed; top: 64px; left: 0; right: 0;
+        background: rgba(10,10,10,0.97);
+        flex-direction: column; gap: 0;
+        border-bottom: 1px solid rgba(201,168,76,0.15);
+        padding: 0.5rem 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { border-top: 1px solid rgba(255,255,255,0.04); }
+      .nav-links a {
+        display: block;
+        padding: 0.9rem 2rem;
+        font-size: 0.85rem;
+      }
+      .nav-toggle { display: flex; }
+
+      .page-banner { padding: 7rem 2rem 3.5rem; }
+      .form-section { padding: 3.5rem 2rem 5rem; }
+      .form-wrapper { padding: 2.2rem 1.6rem; }
+      footer { padding: 2rem; flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 580px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .btn-submit { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       NAV — matches index.html + new link
+  ══════════════════════════════════════ -->
+  <nav>
+    <a href="index.html" class="nav-logo">Midsouth <span>Venture</span> Labs</a>
+
+    <!-- Mobile hamburger -->
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#value">Program</a></li>
+      <li><a href="startups.html">Startups</a></li>
+      <li><a href="services.html">A La Carte Services</a></li>
+      <li><a href="index.html#investors">For Investors &amp; Partners</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="signup.html" class="active">Pitch Day Signup</a></li>
+    </ul>
+
+    <a href="apply.html" class="nav-cta">Apply Now</a>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       PAGE BANNER
+  ══════════════════════════════════════ -->
+  <div class="page-banner">
+    <div class="banner-line"></div>
+    <div class="page-banner-inner">
+      <div class="page-eyebrow fade-up">Summer 2026</div>
+      <h1 class="page-title fade-up delay-1">
+        Pitch Day<br><em>Startup Signup</em>
+      </h1>
+      <p class="page-subtitle fade-up delay-2">
+        Invite your early‑stage idea into the room. Register your Mid‑South startup for a live pitch in front of investors, mentors, and the community.
+      </p>
+      <div class="event-meta fade-up delay-3">
+        <span class="meta-chip">Summer 2026</span>
+        <span class="meta-chip">Memphis, TN</span>
+        <span class="meta-chip">Mid-South Startups</span>
+        <span class="meta-chip">Live Audience</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SIGNUP FORM
+  ══════════════════════════════════════ -->
+  <section class="form-section">
+    <div class="form-wrapper" id="formWrapper">
+
+      <!-- ── Form header tag ── -->
+      <div class="form-heading">Founder &amp; Startup Registration</div>
+
+      <!-- ── The form ── -->
+      <form id="pitchForm" novalidate>
+        <div class="form-grid">
+
+          <!-- SECTION: Founder Info -->
+          <div class="form-section-label full">
+            <span>01</span> Founder Information
+          </div>
+
+          <!-- Founder Name -->
+          <div class="form-group">
+            <label for="founderName">Founder Name <span class="req">*</span></label>
+            <input
+              type="text"
+              id="founderName"
+              name="founderName"
+              placeholder="Jane Smith"
+              autocomplete="name"
+              aria-required="true"
+            />
+            <span class="field-error" id="err-founderName">Please enter the founder's name.</span>
+          </div>
+
+          <!-- Founder Phone -->
+          <div class="form-group">
+            <label for="founderPhone">Phone Number <span class="req">*</span></label>
+            <input
+              type="tel"
+              id="founderPhone"
+              name="founderPhone"
+              placeholder="(901) 555-0100"
+              autocomplete="tel"
+              aria-required="true"
+            />
+            <span class="field-error" id="err-founderPhone">Please enter a valid phone number.</span>
+          </div>
+
+          <!-- Founder Email (full width) -->
+          <div class="form-group full">
+            <label for="founderEmail">Email Address <span class="req">*</span></label>
+            <input
+              type="email"
+              id="founderEmail"
+              name="founderEmail"
+              placeholder="jane@yourstartup.com"
+              autocomplete="email"
+              aria-required="true"
+            />
+            <span class="field-error" id="err-founderEmail">Please enter a valid email address.</span>
+          </div>
+
+          <!-- DIVIDER -->
+          <div class="form-divider"></div>
+
+          <!-- SECTION: Startup Info -->
+          <div class="form-section-label full">
+            <span>02</span> Startup Details
+          </div>
+
+          <!-- Startup Name -->
+          <div class="form-group">
+            <label for="startupName">Startup Name <span class="req">*</span></label>
+            <input
+              type="text"
+              id="startupName"
+              name="startupName"
+              placeholder="Acme Ventures"
+              aria-required="true"
+            />
+            <span class="field-error" id="err-startupName">Please enter your startup's name.</span>
+          </div>
+
+          <!-- Industry -->
+          <div class="form-group">
+            <label for="industry">Industry <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select id="industry" name="industry" aria-required="true">
+                <option value="" disabled selected>Select an industry</option>
+                <option value="fintech">Fintech</option>
+                <option value="healthtech">Healthtech</option>
+                <option value="edtech">Edtech</option>
+                <option value="logistics">Logistics &amp; Supply Chain</option>
+                <option value="agtech">Agtech</option>
+                <option value="saas">SaaS / B2B Software</option>
+                <option value="consumer">Consumer Products</option>
+                <option value="retail">Retail &amp; E‑Commerce</option>
+                <option value="media">Media &amp; Entertainment</option>
+                <option value="cleantech">Cleantech / Sustainability</option>
+                <option value="real-estate">Real Estate</option>
+                <option value="food">Food &amp; Beverage</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <span class="field-error" id="err-industry">Please select an industry.</span>
+          </div>
+
+          <!-- Startup Description -->
+          <div class="form-group full">
+            <label for="description">
+              Startup Description <span class="req">*</span>
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Briefly describe what your startup does, the problem you solve, and who your customers are (2–4 sentences)."
+              aria-required="true"
+            ></textarea>
+            <span class="field-error" id="err-description">Please describe your startup (at least 20 characters).</span>
+          </div>
+
+          <!-- Number of Speakers -->
+          <div class="form-group">
+            <label for="numSpeakers">Number of Speakers <span class="req">*</span></label>
+            <input
+              type="number"
+              id="numSpeakers"
+              name="numSpeakers"
+              placeholder="1"
+              min="1"
+              max="5"
+              aria-required="true"
+            />
+            <span class="field-error" id="err-numSpeakers">Enter a number between 1 and 5.</span>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-submit" id="submitBtn">
+            Register for Pitch Day
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+
+        </div><!-- /.form-grid -->
+      </form>
+
+      <!-- ── SUCCESS MESSAGE (hidden until submit) ── -->
+      <div id="success-msg" role="status" aria-live="polite">
+        <div class="success-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div class="success-title">You're Registered!</div>
+        <p class="success-body">
+          Thanks, <strong id="successName"></strong> — we've received your signup for
+          <strong id="successStartup"></strong>. Keep an eye on your inbox at
+          <strong id="successEmail"></strong> for event details and next steps.
+        </p>
+      </div>
+
+    </div><!-- /.form-wrapper -->
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer>
+    <div class="footer-logo">Midsouth <span>Venture</span> Labs</div>
+    <p>Memphis, Tennessee · Mid‑South Region</p>
+    <p>© 2026 Midsouth Venture Labs. All rights reserved.</p>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════
+       JAVASCRIPT — Validation & UX
+  ══════════════════════════════════════ -->
+  <script>
+    /* ── Mobile nav toggle ── */
+    const navToggle = document.getElementById('navToggle');
+    const navLinks  = document.getElementById('navLinks');
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', isOpen);
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    /* ── Helpers ── */
+
+    /**
+     * Show or hide a field's error message and add/remove the error class.
+     * @param {string} fieldId  - the input/select/textarea id
+     * @param {boolean} isValid - true = field is valid
+     */
+    function setFieldState(fieldId, isValid) {
+      const field = document.getElementById(fieldId);
+      const errEl = document.getElementById('err-' + fieldId);
+      if (!field || !errEl) return;
+
+      if (isValid) {
+        field.classList.remove('error');
+        errEl.classList.remove('visible');
+      } else {
+        field.classList.add('error');
+        errEl.classList.add('visible');
+      }
+    }
+
+    /** Basic email regex */
+    function isValidEmail(val) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+    }
+
+    /** Strip non-digit chars and check length (7–15 digits) */
+    function isValidPhone(val) {
+      const digits = val.replace(/\D/g, '');
+      return digits.length >= 7 && digits.length <= 15;
+    }
+
+    /* ── Live validation on blur (after first touch) ── */
+    const liveFields = [
+      'founderName', 'founderPhone', 'founderEmail',
+      'startupName', 'industry', 'description', 'numSpeakers'
+    ];
+
+    liveFields.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', () => validateField(id));
+      el.addEventListener('input', () => {
+        // only clear error on input, don't add new ones
+        if (el.classList.contains('error')) validateField(id);
+      });
+    });
+
+    /**
+     * Validate a single field by id.
+     * Returns true if valid.
+     */
+    function validateField(id) {
+      const el    = document.getElementById(id);
+      const value = el ? el.value : '';
+      let valid   = false;
+
+      switch (id) {
+        case 'founderName':
+          valid = value.trim().length >= 2;
+          break;
+        case 'founderPhone':
+          valid = isValidPhone(value);
+          break;
+        case 'founderEmail':
+          valid = isValidEmail(value);
+          break;
+        case 'startupName':
+          valid = value.trim().length >= 2;
+          break;
+        case 'industry':
+          valid = value !== '';
+          break;
+        case 'description':
+          valid = value.trim().length >= 20;
+          break;
+        case 'numSpeakers': {
+          const n = parseInt(value, 10);
+          valid = !isNaN(n) && n >= 1 && n <= 5;
+          break;
+        }
+        default:
+          valid = value.trim().length > 0;
+      }
+
+      setFieldState(id, valid);
+      return valid;
+    }
+
+    /* ── Form submission ── */
+    document.getElementById('pitchForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Validate all fields and collect results
+      const results = liveFields.map(id => validateField(id));
+      const allValid = results.every(Boolean);
+
+      if (!allValid) {
+        // Focus the first invalid field for accessibility
+        const firstInvalidId = liveFields.find(id => !validateField(id));
+        if (firstInvalidId) document.getElementById(firstInvalidId).focus();
+        return;
+      }
+
+      // Disable button while "submitting"
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Registering…';
+
+      // Simulate async submit (replace with real fetch/POST as needed)
+      setTimeout(() => {
+        showSuccess();
+      }, 800);
+    });
+
+    /** Hide the form and show the success message */
+    function showSuccess() {
+      const name    = document.getElementById('founderName').value.trim();
+      const startup = document.getElementById('startupName').value.trim();
+      const email   = document.getElementById('founderEmail').value.trim();
+
+      // Inject personalised data into success message
+      document.getElementById('successName').textContent    = name;
+      document.getElementById('successStartup').textContent = startup;
+      document.getElementById('successEmail').textContent   = email;
+
+      // Hide form, reveal success
+      document.getElementById('pitchForm').style.display = 'none';
+      document.querySelector('.form-heading').style.display = 'none';
+      const successEl = document.getElementById('success-msg');
+      successEl.classList.add('visible');
+      successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+
+</body>
+</html>

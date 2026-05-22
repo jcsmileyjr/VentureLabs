@@ -622,7 +622,7 @@
         business_name:         document.getElementById('business_name').value.trim(),
         industry:              document.getElementById('industry').value,
         number_of_investors:   parseInt(document.getElementById('number_of_investors').value) || 0,
-        number_of_pilots:      parseInt(document.getElementById('number_of_pilots').value)    || 0,
+        pilots:                parseInt(document.getElementById('number_of_pilots').value)    || 0,
         have_mvp:              document.getElementById('have_mvp').checked,
       };
     }
@@ -649,7 +649,7 @@
       document.getElementById('business_name').value        = client.business_name        || '';
       document.getElementById('industry').value             = client.industry             || '';
       document.getElementById('number_of_investors').value  = client.number_of_investors  ?? '';
-      document.getElementById('number_of_pilots').value     = client.number_of_pilots     ?? '';
+      document.getElementById('number_of_pilots').value     = client.pilots                ?? '';
       document.getElementById('have_mvp').checked           = !!client.have_mvp;
       editIdField.value = client.business_id;
       setEditMode();
@@ -718,7 +718,7 @@
           <td>${esc(c.founder_phone_number)}</td>
           <td>${esc(c.industry)}</td>
           <td style="text-align:center;">${c.number_of_investors ?? 0}</td>
-          <td style="text-align:center;">${c.number_of_pilots ?? 0}</td>
+          <td style="text-align:center;">${c.pilots ?? 0}</td>
           <td style="text-align:center;">
             <span class="mvp-badge ${c.have_mvp ? 'mvp-yes' : 'mvp-no'}">
               ${c.have_mvp ? 'Yes' : 'No'}

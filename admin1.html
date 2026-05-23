@@ -217,53 +217,6 @@
       color: var(--silver); cursor: pointer; font-family: 'Barlow', sans-serif;
     }
 
-    /* ── VALIDATION STYLES ── */
-
-    /* Required asterisk */
-    .req {
-      color: var(--danger-light);
-      margin-left: 0.2em;
-      font-size: 0.75em;
-      vertical-align: top;
-      line-height: 2;
-    }
-
-    /* Error state on inputs / selects */
-    .form-group.has-error input,
-    .form-group.has-error select {
-      border-color: rgba(231,76,60,0.6) !important;
-      background: rgba(231,76,60,0.04);
-    }
-    .form-group.has-error .checkbox-group {
-      border-color: rgba(231,76,60,0.6);
-      background: rgba(231,76,60,0.04);
-    }
-
-    /* Inline error message */
-    .field-error {
-      font-size: 0.72rem;
-      color: var(--danger-light);
-      letter-spacing: 0.04em;
-      margin-top: 0.1rem;
-      display: none;             /* hidden until .has-error is applied */
-      align-items: center;
-      gap: 0.35rem;
-    }
-    .form-group.has-error .field-error { display: flex; }
-    .field-error::before {
-      content: '!';
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 13px; height: 13px; flex-shrink: 0;
-      background: var(--danger-light); color: var(--white);
-      font-size: 0.6rem; font-weight: 700; border-radius: 50%;
-    }
-
-    /* Valid state (green left-border flash) */
-    .form-group.is-valid input,
-    .form-group.is-valid select {
-      border-color: rgba(61,168,120,0.45);
-    }
-
     /* Form actions */
     .form-actions {
       margin-top: 2rem;
@@ -469,11 +422,13 @@
     <ul class="nav-links">
       <li><a href="index.html#value">Program</a></li>
       <li><a href="startups.html">Startups</a></li>
+      <li><a href="services.html">A La Carte Services</a></li>
       <li><a href="index.html#investors">For Investors &amp; Partners</a></li>
       <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
       <li><a href="admin.html" class="active">Admin</a></li>
     </ul>
-    <a href="index.html#apply" class="nav-cta">Apply Now</a>
+    <a href="apply.html" class="nav-cta">Apply Now</a>
   </nav>
 
   <!-- ── TOAST ── -->
@@ -511,32 +466,28 @@
 
       <div class="form-grid">
 
-        <div class="form-group" id="grp-founder_name">
-          <label for="founder_name">Founder Name<span class="req" aria-hidden="true">*</span></label>
-          <input type="text" id="founder_name" placeholder="Jane Smith" autocomplete="name" />
-          <span class="field-error" id="err-founder_name">Founder name is required.</span>
+        <div class="form-group">
+          <label for="founder_name">Founder Name</label>
+          <input type="text" id="founder_name" placeholder="Jane Smith" />
         </div>
 
-        <div class="form-group" id="grp-business_name">
-          <label for="business_name">Business Name<span class="req" aria-hidden="true">*</span></label>
+        <div class="form-group">
+          <label for="business_name">Business Name</label>
           <input type="text" id="business_name" placeholder="Acme Co." />
-          <span class="field-error" id="err-business_name">Business name is required.</span>
         </div>
 
-        <div class="form-group" id="grp-founder_email">
-          <label for="founder_email">Founder Email<span class="req" aria-hidden="true">*</span></label>
-          <input type="email" id="founder_email" placeholder="jane@acme.com" autocomplete="email" />
-          <span class="field-error" id="err-founder_email">A valid email address is required.</span>
+        <div class="form-group">
+          <label for="founder_email">Founder Email</label>
+          <input type="email" id="founder_email" placeholder="jane@acme.com" />
         </div>
 
-        <div class="form-group" id="grp-founder_phone_number">
-          <label for="founder_phone_number">Phone Number<span class="req" aria-hidden="true">*</span></label>
-          <input type="tel" id="founder_phone_number" placeholder="+1 (901) 555-0100" autocomplete="tel" />
-          <span class="field-error" id="err-founder_phone_number">Phone number is required.</span>
+        <div class="form-group">
+          <label for="founder_phone_number">Phone Number</label>
+          <input type="tel" id="founder_phone_number" placeholder="+1 (901) 555-0100" />
         </div>
 
-        <div class="form-group" id="grp-industry">
-          <label for="industry">Industry<span class="req" aria-hidden="true">*</span></label>
+        <div class="form-group">
+          <label for="industry">Industry</label>
           <select id="industry">
             <option value="" disabled selected>Select industry…</option>
             <option>AgriTech</option>
@@ -554,19 +505,16 @@
             <option>SaaS / Software</option>
             <option>Other</option>
           </select>
-          <span class="field-error" id="err-industry">Please select an industry.</span>
         </div>
 
-        <div class="form-group" id="grp-number_of_investors">
-          <label for="number_of_investors">Number of Investors<span class="req" aria-hidden="true">*</span></label>
+        <div class="form-group">
+          <label for="number_of_investors">Number of Investors</label>
           <input type="number" id="number_of_investors" placeholder="0" min="0" />
-          <span class="field-error" id="err-number_of_investors">Enter a number (0 or more).</span>
         </div>
 
-        <div class="form-group" id="grp-number_of_pilots">
-          <label for="number_of_pilots">Number of Pilots<span class="req" aria-hidden="true">*</span></label>
+        <div class="form-group">
+          <label for="number_of_pilots">Number of Pilots</label>
           <input type="number" id="number_of_pilots" placeholder="0" min="0" />
-          <span class="field-error" id="err-number_of_pilots">Enter a number (0 or more).</span>
         </div>
 
         <div class="form-group" style="align-self: end;">
@@ -625,7 +573,8 @@
     const SUPABASE_URL      = 'https://tacdeguqsjsebckzlpwz.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_cq5Lw5KViEIXzJOyXqWjMg_Spa2wmY-';
 
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     /* ──────────────────────────────────────────────
        STATE
@@ -673,7 +622,7 @@
         business_name:         document.getElementById('business_name').value.trim(),
         industry:              document.getElementById('industry').value,
         number_of_investors:   parseInt(document.getElementById('number_of_investors').value) || 0,
-        number_of_pilots:      parseInt(document.getElementById('number_of_pilots').value)    || 0,
+        pilots:                parseInt(document.getElementById('number_of_pilots').value)    || 0,
         have_mvp:              document.getElementById('have_mvp').checked,
       };
     }
@@ -689,7 +638,6 @@
       document.getElementById('number_of_pilots').value     = '';
       document.getElementById('have_mvp').checked           = false;
       editIdField.value = '';
-      clearValidation();
       setCreateMode();
     }
 
@@ -701,9 +649,9 @@
       document.getElementById('business_name').value        = client.business_name        || '';
       document.getElementById('industry').value             = client.industry             || '';
       document.getElementById('number_of_investors').value  = client.number_of_investors  ?? '';
-      document.getElementById('number_of_pilots').value     = client.number_of_pilots     ?? '';
+      document.getElementById('number_of_pilots').value     = client.pilots                ?? '';
       document.getElementById('have_mvp').checked           = !!client.have_mvp;
-      editIdField.value = client.id;
+      editIdField.value = client.business_id;
       setEditMode();
     }
 
@@ -738,7 +686,8 @@
 
       const { data, error } = await db
         .from('clients')
-        .select('*');
+        .select('*')
+        .order('business_id', { ascending: false });
 
       if (error) {
         clientList.innerHTML = `<div class="loading-state" style="color:var(--danger-light);">Error: ${error.message}</div>`;
@@ -769,7 +718,7 @@
           <td>${esc(c.founder_phone_number)}</td>
           <td>${esc(c.industry)}</td>
           <td style="text-align:center;">${c.number_of_investors ?? 0}</td>
-          <td style="text-align:center;">${c.number_of_pilots ?? 0}</td>
+          <td style="text-align:center;">${c.pilots ?? 0}</td>
           <td style="text-align:center;">
             <span class="mvp-badge ${c.have_mvp ? 'mvp-yes' : 'mvp-no'}">
               ${c.have_mvp ? 'Yes' : 'No'}
@@ -777,8 +726,8 @@
           </td>
           <td>
             <div class="row-actions">
-              <button class="btn-edit"   onclick="editClient('${c.id}')">Edit</button>
-              <button class="btn-delete" onclick="requestDelete('${c.id}')">Delete</button>
+              <button class="btn-edit"   onclick="editClient('${c.business_id}')">Edit</button>
+              <button class="btn-delete" onclick="requestDelete('${c.business_id}')">Delete</button>
             </div>
           </td>
         </tr>
@@ -818,7 +767,7 @@
     /* ──────────────────────────────────────────────
        CREATE — insert a new client record
     ────────────────────────────────────────────── */
-    async function addClient(formData) {
+    async function createClientAccount(formData) {
       const { error } = await db.from('clients').insert([formData]);
       if (error) {
         showToast(`Insert failed: ${error.message}`, true);
@@ -836,7 +785,7 @@
       const { error } = await db
         .from('clients')
         .update(formData)
-        .eq('id', id);
+        .eq('business_id', id);
 
       if (error) {
         showToast(`Update failed: ${error.message}`, true);
@@ -854,7 +803,7 @@
       const { error } = await db
         .from('clients')
         .delete()
-        .eq('id', id);
+        .eq('business_id', id);
 
       if (error) {
         showToast(`Delete failed: ${error.message}`, true);
@@ -871,7 +820,7 @@
       const { data, error } = await db
         .from('clients')
         .select('*')
-        .eq('id', id)
+        .eq('business_id', id)
         .single();
 
       if (error || !data) {
@@ -895,138 +844,23 @@
     }
 
     /* ──────────────────────────────────────────────
-       VALIDATION
-       Each field rule: { id, test(value) => bool, message }
-       Email uses RFC-style regex. Numbers allow 0.
-    ────────────────────────────────────────────── */
-    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-    const FIELD_RULES = [
-      {
-        id: 'founder_name',
-        test: v => v.trim().length > 0,
-        message: 'Founder name is required.'
-      },
-      {
-        id: 'business_name',
-        test: v => v.trim().length > 0,
-        message: 'Business name is required.'
-      },
-      {
-        id: 'founder_email',
-        test: v => v.trim().length > 0 && EMAIL_RE.test(v.trim()),
-        message: 'A valid email address is required.'
-      },
-      {
-        id: 'founder_phone_number',
-        test: v => v.trim().length > 0,
-        message: 'Phone number is required.'
-      },
-      {
-        id: 'industry',
-        test: v => v !== '' && v !== null,
-        message: 'Please select an industry.'
-      },
-      {
-        id: 'number_of_investors',
-        test: v => v.trim() !== '' && !isNaN(Number(v)) && Number(v) >= 0,
-        message: 'Enter a number (0 or more).'
-      },
-      {
-        id: 'number_of_pilots',
-        test: v => v.trim() !== '' && !isNaN(Number(v)) && Number(v) >= 0,
-        message: 'Enter a number (0 or more).'
-      },
-    ];
-
-    /**
-     * Validate a single field by its id.
-     * Adds/removes .has-error and .is-valid on the wrapper group,
-     * and updates the error message text.
-     * Returns true if valid.
-     */
-    function validateField(fieldId) {
-      const rule  = FIELD_RULES.find(r => r.id === fieldId);
-      if (!rule) return true; // no rule = always passes (e.g. checkbox)
-
-      const el    = document.getElementById(fieldId);
-      const grp   = document.getElementById('grp-' + fieldId);
-      const errEl = document.getElementById('err-' + fieldId);
-      if (!el || !grp) return true;
-
-      const val   = el.value;
-      const valid = rule.test(val);
-
-      grp.classList.toggle('has-error', !valid);
-      grp.classList.toggle('is-valid',   valid);
-      if (errEl) errEl.textContent = rule.message;
-
-      return valid;
-    }
-
-    /**
-     * Validate all fields. Returns true only if every field passes.
-     * Marks all fields so errors are visible simultaneously.
-     */
-    function validateAll() {
-      let allValid = true;
-      for (const rule of FIELD_RULES) {
-        const fieldValid = validateField(rule.id);
-        if (!fieldValid) allValid = false;
-      }
-      return allValid;
-    }
-
-    /**
-     * Clear validation state from all fields (used on reset).
-     */
-    function clearValidation() {
-      for (const rule of FIELD_RULES) {
-        const grp = document.getElementById('grp-' + rule.id);
-        if (grp) {
-          grp.classList.remove('has-error', 'is-valid');
-        }
-      }
-    }
-
-    /* Attach live blur-validation to each field so errors clear as soon as
-       the user fixes them, without waiting for submit. */
-    FIELD_RULES.forEach(rule => {
-      const el = document.getElementById(rule.id);
-      if (el) {
-        // Validate on blur (leaving the field)
-        el.addEventListener('blur', () => validateField(rule.id));
-        // Re-validate on input so green border appears immediately when fixed
-        el.addEventListener('input', () => {
-          const grp = document.getElementById('grp-' + rule.id);
-          if (grp && grp.classList.contains('has-error')) {
-            validateField(rule.id);
-          }
-        });
-      }
-    });
-
-    /* ──────────────────────────────────────────────
        EVENT LISTENERS
     ────────────────────────────────────────────── */
 
-    /** Form submit — validates everything, then creates or updates */
+    /** Form submit — decides between create and update */
     submitBtn.addEventListener('click', () => {
-      // Run full validation; stop if any field fails
-      if (!validateAll()) {
-        showToast('Please fix the highlighted fields before saving.', true);
-        // Scroll to first error
-        const firstError = document.querySelector('.form-group.has-error');
-        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const formData = getFormData();
+
+      // Basic validation
+      if (!formData.founder_name || !formData.founder_email) {
+        showToast('Founder name and email are required.', true);
         return;
       }
-
-      const formData = getFormData();
 
       if (isEditMode && editIdField.value) {
         updateClient(editIdField.value, formData);
       } else {
-        addClient(formData);
+        createClientAccount(formData);
       }
     });
 
